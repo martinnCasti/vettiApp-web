@@ -6,11 +6,11 @@ import Button from "./Button";
 
 const Navbar = () => {
   return (
-    <nav className="flexBetween max-container padding-container relative z-30 py-5">
+    <nav className="flexBetween max-container padding-container relative z-30 py-8">
       <Link href="/">
         <Image src="/logo.png" alt="logo" width={84} height={69} />
       </Link>
-      <ul className="hidden h-full gap-12 lg:flex">
+      <ul className="hidden h-full gap-20 lg:flex">
         {NAV_LINKS.map((link) => (
           <Link
             href={link.href}
@@ -22,14 +22,22 @@ const Navbar = () => {
         ))}
       </ul>
       <div className="lg:flexCenter hidden">
-        <Link href="/login">
-          <Button
-            type="button"
-            title="Login"
-            icon="/profile.png"
-            variant="btn_dark_green"
-          />
-        </Link>
+        <Button
+          type="button"
+          title="Login"
+          icon="/profile.png"
+          variant="btn_dark_green"
+          href="/login"
+        />
+      </div>
+      <div className="lg:flex  hidden">
+        <Button
+          type="button"
+          title="Sign Up"
+          icon="/profile.png"
+          variant="btn_dark_green"
+          href="/"
+        />
       </div>
       <Image
         src="/menu.svg"

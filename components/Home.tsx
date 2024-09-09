@@ -15,7 +15,7 @@ const Home = () => {
           magnam molestias odit corporis similique odio optio fugiat reiciendis?
         </p>
       </div>
-      <div className="flex flex-col w-full py-5 gap-3 sm:flex-row">
+      <div className="flex flex-col w-full ml-5 py-5 gap-3 sm:flex-row">
         <Button type="button" title="Descargar App" variant="btn_blue" />
         <Button
           type="button"

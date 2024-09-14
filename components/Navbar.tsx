@@ -36,7 +36,7 @@ const Navbar = () => {
           title="Sign Up"
           icon="/profile.png"
           variant="btn_dark_green"
-          href="/"
+          href="/signup"
         />
       </div>
       <Image

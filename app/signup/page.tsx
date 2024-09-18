@@ -1,9 +1,7 @@
 "use client";
 
-import { apiUrl } from "@/api/api";
+import { apiUrl, setAuthToken } from "@/api/api";
 import { useState } from "react";
-import axios from "axios";
-import { fetchToken } from "@/api/getToken";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -29,25 +27,20 @@ const SignUp = () => {
     setSuccess(false);
 
     try {
-      // Obtener el token
-      const token = await fetchToken();
-      console.log(token, "Aca esta el token");
-
-      if (!token) {
-        setError("No se pudo obtener el token de autenticación.");
-        return;
-      }
-      // Realizar la solicitud POST con el token en los headers
-      const response = await apiUrl.post("/user/register", form, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Correcta interpolación del token
-          "Content-Type": "application/json",
-        },
-      });
+      // Make the POST request to register the user
+      const response = await apiUrl.post("/user/register", form);
       console.log("User registered successfully:", response.data);
       setSuccess(true);
-    } catch (err) {
-      console.error("Error registering user:", err);
+    } catch (err: any) {
+      console.error(
+        "Error registering user:",
+        err.response ? err.response.data : err.message
+      );
+      setError(
+        err.response
+          ? err.response.data.message
+          : "Error registrando el usuario."
+      );
     }
   };
 

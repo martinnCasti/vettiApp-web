@@ -1,6 +1,6 @@
 "use client";
 
-import { apiUrl, setAuthToken } from "@/api/api";
+import { tokenUrl, apiUrl, setAuthToken } from "@/api/api";
 import { useState } from "react";
 // Import axios instance and token handling
 
@@ -27,7 +27,7 @@ const SignIn = () => {
       const token = response.data.token; // Assuming the token comes in the response
       localStorage.setItem("token", token); // Store the token in localStorage
       setAuthToken(token); // Set token in Authorization header for future requests
-
+      console.log(token, "Aca deberia imprimir token");
       setSuccess(true);
     } catch (err) {
       console.error("Error signing in:", err);

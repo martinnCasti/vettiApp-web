@@ -9,11 +9,12 @@ const tokenRequestData = {
   client_id: "Dgd31Xpn0ppSkXsDV3hWLGWlBoS96Mnr", // Reemplaza por tu client_id
   client_secret:
     "cpKh3VKN_-trH6OCOUgWMYkQHBu9_C5ywqByFefrdCZjMGFfK8IdxB9gMW63tYS7", // Reemplaza por tu client_secret
-  audience: "https://dev-k1n7shfb1jvuxkvz.us.auth0.com/api/v2/", // Reemplaza por tu audiencia
+  audience: "https://dev-k1n7shfb1jvuxkvz.us.auth0.com/api/v2/",
+  "Access-Control-Allow-Origin": "*", // Reemplaza por tu audiencia
 };
 
 // Hacer la solicitud POST para obtener el token
-export const fetchToken = async (): Promise<string | null> => {
+const fetchToken = async (): Promise<string | null> => {
   try {
     const response = await axios.post(
       tokenUrl,
@@ -39,3 +40,5 @@ export const fetchToken = async (): Promise<string | null> => {
     return null;
   }
 };
+
+export default fetchToken;

@@ -1,16 +1,26 @@
 "use client";
 
-import { apiUrl, setAuthToken } from "@/api/api";
 import { useState } from "react";
+import api from "@/src/api"; // Adjust this to match your actual path
+
+// Define the CreateUserRequestBody interface
+interface CreateUserRequestBody {
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  role: string;
+}
 
 const SignUp = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CreateUserRequestBody>({
     name: "",
     lastName: "",
     email: "",
     password: "",
     phoneNumber: "",
-    role: 2,
+    role: "2",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +37,8 @@ const SignUp = () => {
     setSuccess(false);
 
     try {
-      // Make the POST request to register the user
-      const response = await apiUrl.post("/user/register", form);
+      // Use Axios (api) to make the request
+      const response = await api.post("/user/register", form);
       console.log("User registered successfully:", response.data);
       setSuccess(true);
     } catch (err: any) {

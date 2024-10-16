@@ -1,0 +1,47 @@
+import Image from "next/image";
+import React from "react";
+
+const Services = () => {
+  return (
+    <section className="max-container padding-container lg:flex flex-row size-full">
+      <div className="flex justify-center size-full mb-5">
+        <Image src="/cards.png" alt="dog&cat" width={600} height={600} />
+      </div>
+      <div className="p-3 m-3 regular-14 sm:regular-20">
+        <div>
+          <h1 className="bold-16 sm:bold-20">
+            Búsqueda por especialidad Médicos Veterinarios
+          </h1>
+          <p>
+            Permite a los usuarios encontrar fácilmente veterinarios
+            especializados según sus necesidades.
+          </p>
+        </div>
+        <div className="py-2">
+          <h1 className="bold-16 sm:bold-20">Agenda de Turnos</h1>
+          <p>
+            Los usuarios pueden ver y seleccionar los horarios disponibles para
+            agendar citas, facilitando la organización de sus visitas a la
+            clínica.
+          </p>
+        </div>
+        <div className="py-2">
+          <h1 className="bold-16 sm:bold-20">Información de Clínicas</h1>
+          <p>
+            Ofrece detalles sobre las clínicas veterinarias, incluyendo
+            direcciones, horarios de atención y contacto, para que los usuarios
+            puedan elegir la mejor opción.
+          </p>
+        </div>
+        <div className="py-2">
+          <h1 className="bold-16 sm:bold-20">FEATURE4</h1>
+          <p>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumend.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Services;

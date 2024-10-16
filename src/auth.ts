@@ -1,33 +1,22 @@
 import axios from "axios";
-import cookie from "js-cookie"; // Para manejar cookies en el lado del cliente
 
-const TOKENURL = "https://dev-k1n7shfb1jvuxkvz.us.auth0.com/oauth/token";
-
-// Definir la estructura esperada de la respuesta
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-}
-
-export const getToken = async (): Promise<string> => {
+// Función para obtener el token
+export const fetchNewAccessToken = async () => {
   try {
-    const response = await axios.post<TokenResponse>(TOKENURL, {
-      grant_type: "client_credentials",
-      client_id: "Dgd31Xpn0ppSkXsDV3hWLGWlBoS96Mnr",
-      client_secret:
-        "cpKh3VKN-trH6OCOUgWMYkQHBu9_C5ywqByFefrdCZjMGFfK8IdxB9gMW63tYS7",
-      audience: "https://dev-k1n7shfb1jvuxkvz.us.auth0.com/api/v2/",
-    });
+    const response = await axios.post(
+      "https://vetti-app.onrender.com/getToken",
+      {},
+      {
+        headers: {
+          Authorization: "2c98a622-b0e2-4b24-8deb-e3a3f4b54b7e",
+        },
+      }
+    );
 
-    const { access_token, refresh_token } = response.data;
-
-    // Guardar el token en cookies
-    cookie.set("access_token", access_token);
-    cookie.set("refresh_token", refresh_token);
-
+    const { access_token } = response.data;
     return access_token;
-  } catch (error: any) {
-    console.error("Error obtaining token:", error);
+  } catch (error) {
+    console.error("Error al obtener el token de acceso:", error);
     throw error;
   }
 };

@@ -11,6 +11,9 @@ interface CreateUserRequestBody {
   password: string;
   phoneNumber: string;
   role: string;
+  address: string;
+  district: string;
+  dni: string;
 }
 
 const SignUp = () => {
@@ -21,6 +24,9 @@ const SignUp = () => {
     password: "",
     phoneNumber: "",
     role: "2",
+    address: "",
+    district: "",
+    dni: "",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -147,6 +153,56 @@ const SignUp = () => {
               value={form.phoneNumber}
               onChange={handleChange}
               placeholder="1212121212"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="address"
+            >
+              Dirección
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              placeholder="Ingrese su dirección"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="district"
+            >
+              Distrito
+            </label>
+            <input
+              type="text"
+              name="district"
+              value={form.district}
+              onChange={handleChange}
+              placeholder="Ingrese su distrito"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="dni"
+            >
+              DNI
+            </label>
+            <input
+              type="text"
+              name="dni"
+              value={form.dni}
+              onChange={handleChange}
+              placeholder="Ingrese su DNI"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

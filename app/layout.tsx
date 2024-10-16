@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
+import { usePathname } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "VettiApp",
@@ -16,7 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-slate-400">
-        <Navbar />
+        {/* Removemos la clase pt-16 del body para manejarla en cada layout específico */}
+        <NavbarWrapper />
         <main className="relative overflow-hidden">{children}</main>
         <Footer />
       </body>

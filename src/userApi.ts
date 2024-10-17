@@ -6,10 +6,13 @@ import api from "./api";
 interface CreateUserRequestBody {
   name: string;
   lastName: string;
-  password: string;
   email: string;
+  password: string;
   phoneNumber: string;
   role: string;
+  address: string;
+  district: string;
+  dni: string;
 }
 
 // Función que maneja la creación del usuario
@@ -25,6 +28,9 @@ export default async function handler(
       email,
       phoneNumber,
       role,
+      address,
+      district,
+      dni,
     }: CreateUserRequestBody = req.body;
 
     try {
@@ -36,6 +42,9 @@ export default async function handler(
         email,
         phoneNumber,
         role,
+        address,
+        district,
+        dni,
       });
 
       res

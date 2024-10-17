@@ -43,7 +43,7 @@ const SignIn = () => {
 
       setSuccess(true);
       // Redirect to dashboard or another page
-      router.push("/dashboard");
+      router.push("/login/dashboard");
     } catch (err: any) {
       console.error(
         "Error signing in:",

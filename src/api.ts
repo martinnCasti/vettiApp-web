@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 import { fetchNewAccessToken } from "./auth"; // Función que obtiene el token
 
 const api = axios.create({

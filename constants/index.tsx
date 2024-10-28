@@ -1,7 +1,7 @@
 // NAVIGATION
 export const NAV_LINKS = [
   { href: "/", key: "how_vettiapp_work", label: "Que es VettiApp?" },
-  { href: "/services", key: "services", label: "Servicios" },
+  { href: "/work", key: "work", label: "Servicios" },
   { href: "/aboutUs", key: "about_us", label: "Sobre nosotros" },
   { href: "/suscribe", key: "subscribe", label: "Asociate" },
   { href: "/getApp", key: "getApp", label: "Descarga la App" },

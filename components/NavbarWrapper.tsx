@@ -5,11 +5,19 @@ import Navbar from "./Navbar";
 const NavbarWrapper = () => {
   const pathname = usePathname();
 
-  // No mostrar el Navbar principal en rutas que empiecen con /dashboard
-  const shouldShowNavbar =
-    !pathname.startsWith("/dashboard") && !pathname.startsWith("/login");
+  // Lista de rutas donde no queremos mostrar el Navbar principal
+  const excludedRoutes = [
+    "/login/dashboard",
+    // Agrega aquí otras rutas donde no quieras mostrar el Navbar principal
+  ];
 
-  return shouldShowNavbar ? <Navbar /> : null;
+  // Verificar si la ruta actual comienza con alguna de las rutas excluidas
+  const shouldHideNavbar = excludedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // Si no debemos ocultar el navbar, lo mostramos
+  return !shouldHideNavbar ? <Navbar /> : null;
 };
 
 export default NavbarWrapper;

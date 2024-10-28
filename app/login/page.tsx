@@ -1,14 +1,22 @@
 "use client";
-
 import { useState } from "react";
-import api from "@/src/api"; // Adjust this to match your actual path
+import api from "@/src/api";
 import { useRouter } from "next/navigation";
 import cookie from "js-cookie";
 
-// Define the SignInRequestBody interface
 interface SignInRequestBody {
   email: string;
   password: string;
+}
+
+interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  message: string;
+  statusCode: number;
+  role: string;
+  id: number;
+  name: string;
 }
 
 const SignIn = () => {
@@ -32,24 +40,33 @@ const SignIn = () => {
     setSuccess(false);
 
     try {
-      // Use Axios (api) to make the request for sign-in
-      const response = await api.post("/user/login", form);
+      const response = await api.post<LoginResponse>("/user/login", form);
       console.log("User signed in successfully:", response.data);
 
-      // Store the token in cookies
+      // Guardar tokens
       const { access_token, refresh_token } = response.data;
       cookie.set("access_token", access_token);
       cookie.set("refresh_token", refresh_token);
 
+      // Guardar datos del usuario en localStorage
+      localStorage.setItem("userEmail", form.email);
+
+      // Guardar datos adicionales de la respuesta
+      localStorage.setItem("userId", response.data.id.toString());
+      localStorage.setItem("userRole", response.data.role);
+      localStorage.setItem("userName", response.data.name);
       setSuccess(true);
-      // Redirect to dashboard or another page
+      // Redirigir al dashboard
       router.push("/login/dashboard");
     } catch (err: any) {
       console.error(
         "Error signing in:",
         err.response ? err.response.data : err.message
       );
-      setError(err.response ? err.response.data.message : "Error signing in.");
+      setError(
+        err.response?.data?.message ||
+          "Error al iniciar sesión. Por favor, verifica tus credenciales."
+      );
     }
   };
 
@@ -57,14 +74,20 @@ const SignIn = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
-          Sign In
+          Iniciar Sesión
         </h1>
-        {error && <div className="text-red-600 mb-4">{error}</div>}
-        {success && (
-          <div className="text-green-600 mb-4">Successfully signed in!</div>
+        {error && (
+          <div className="text-red-600 mb-4 p-3 bg-red-50 rounded-lg text-center">
+            {error}
+          </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+        {success && (
+          <div className="text-green-600 mb-4 p-3 bg-green-50 rounded-lg text-center">
+            ¡Inicio de sesión exitoso!
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
@@ -73,38 +96,40 @@ const SignIn = () => {
             </label>
             <input
               type="email"
+              id="email"
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Ingresa tu email"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
               required
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
-              Password
+              Contraseña
             </label>
             <input
               type="password"
+              id="password"
               name="password"
               value={form.password}
               onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Ingresa tu contraseña"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
           >
-            Sign In
+            Iniciar Sesión
           </button>
         </form>
       </div>

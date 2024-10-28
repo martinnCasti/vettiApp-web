@@ -1,4 +1,3 @@
-import Content from "@/components/userLogin/Content";
 import NavbarDashboard from "@/components/userLogin/NavbarDashboard";
 import Sidebar from "@/components/userLogin/Sidebar";
 import { ReactNode } from "react";

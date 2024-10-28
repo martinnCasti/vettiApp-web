@@ -27,32 +27,27 @@ const NavbarDashboard = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        console.log("Obteniendo email del localStorage...");
         const userEmail = localStorage.getItem("userEmail");
-        console.log("Email encontrado:", userEmail);
 
         if (!userEmail) {
           router.push("/login");
           return;
         }
 
-        console.log("Solicitando datos del usuario a la API...");
         const userData = await userApi.getUserByEmail(userEmail);
-        console.log("Datos recibidos de la API:", userData);
 
         if (userData && userData.statusCode === 200) {
           setUser(userData);
         } else {
-          console.log("La respuesta no fue exitosa:", userData);
           router.push("/login");
         }
       } catch (error) {
-        console.error("Error detallado al obtener datos:", error);
+        console.error("Error al obtener datos:", error);
         router.push("/login");
       } finally {
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000); // Agregamos un pequeño delay para hacer la transición más suave
+        }, 1000);
       }
     };
 
@@ -61,14 +56,9 @@ const NavbarDashboard = () => {
 
   const handleLogout = () => {
     try {
-      // Limpiar todos los datos del localStorage
       localStorage.clear();
-
-      // Limpiar cookies
       cookie.remove("access_token");
       cookie.remove("refresh_token");
-
-      // Redirigir al login
       router.push("/login");
     } catch (error) {
       console.error("Error durante el logout:", error);
@@ -80,42 +70,33 @@ const NavbarDashboard = () => {
   }
 
   return (
-    <nav className="bg-white shadow-md fixed w-full z-50">
-      {/* El resto del código del navbar permanece igual */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo y título - Lado izquierdo */}
-          <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                width={40}
-                height={40}
-                className="h-10 w-auto"
-              />
-            </div>
+    <nav className="bg-slate-400 shadow-md fixed w-full z-50">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="relative flex items-center justify-between h-16">
+          <div className="absolute left-0 flex items-center h-full pl-4">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="h-10 w-auto"
+            />
           </div>
 
-          {/* Sección de escritorio - Lado derecho */}
-          <div className="hidden md:flex items-center">
-            <div className="ml-4 flex items-center md:ml-6">
-              {/* Dropdown del usuario */}
-              <div className="relative ml-3">
-                <div>
-                  <button
-                    className="flex items-center max-w-xs bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-green-500"
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  >
-                    <UserIcon className="h-6 w-6 text-gray-600 mr-2" />
-                    <span className="text-gray-700">
-                      Bienvenido
-                      {user ? `, ${user.name} ${user.lastName}` : ""}
-                    </span>
-                    <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
-                  </button>
-                </div>
-                {/* Menú dropdown */}
+          <div className="absolute right-0 h-full pr-4 flex items-center">
+            <div className="hidden md:flex items-center">
+              <div className="relative">
+                <button
+                  className="flex items-center bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-green-500"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  <UserIcon className="h-6 w-6 text-gray-600 mr-2" />
+                  <span className="text-gray-700">
+                    Bienvenido
+                    {user ? `, ${user.name} ${user.lastName}` : ""}
+                  </span>
+                  <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
+                </button>
                 {isDropdownOpen && (
                   <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
                     <button
@@ -129,25 +110,23 @@ const NavbarDashboard = () => {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Botón de menú móvil */}
-          <div className="flex items-center md:hidden">
-            <button
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
-            </button>
+            <div className="flex items-center md:hidden">
+              <button
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <X className="block h-6 w-6" />
+                ) : (
+                  <Menu className="block h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Menú móvil */}
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="pt-4 pb-3 border-t border-gray-200">

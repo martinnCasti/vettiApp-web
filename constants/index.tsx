@@ -1,4 +1,47 @@
-// NAVIGATION
+import { ReactNode } from "react";
+import {
+  Home,
+  Users,
+  Calendar,
+  Clock,
+  Settings,
+  Clipboard,
+} from "lucide-react";
+
+// Construccion Sidebar
+export interface MenuItem {
+  href: string;
+  icon: ReactNode;
+  title: string;
+}
+// Construccion de veterinarios
+export interface Veterinarian {
+  id: number;
+  name: string;
+  specialty: string;
+  available: boolean;
+  email: string;
+  phone: string;
+  location: string;
+  schedule: string;
+  image: string;
+}
+// Construccion de Planes
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+}
+export interface PricingPlan {
+  name: string;
+  price: string;
+  description: string;
+  features: PlanFeature[];
+  buttonText: string;
+  buttonStyle: string;
+  popular?: boolean;
+}
+
+// Navegacion pagina principal
 export const NAV_LINKS = [
   { href: "/", key: "how_vettiapp_work", label: "Que es VettiApp?" },
   { href: "/work", key: "work", label: "Servicios" },
@@ -8,40 +51,123 @@ export const NAV_LINKS = [
   // { href: "/", key: "pricing ", label: "Pricing " },
 ];
 
-// FOOTER SECTION
-export const FOOTER_LINKS = [
+// Datos de veterinarios
+export const VETERINARIANS_LIST: Veterinarian[] = [
   {
-    title: "Learn More",
-    links: [
-      "About Hilink",
-      "Press Releases",
-      "Environment",
-      "Jobs",
-      "Privacy Policy",
-      "Contact Us",
-    ],
+    id: 1,
+    name: "Dra. María González",
+    specialty: "Cirugía y Ortopedia",
+    available: true,
+    email: "maria.gonzalez@vetti.com",
+    phone: "+54 11 1234-5678",
+    location: "Consultorio 101",
+    schedule: "Lun - Vie: 9:00 - 17:00",
+    image: "/placeholder-vet-1.jpg",
   },
   {
-    title: "Our Community",
-    links: ["Climbing xixixi", "Hiking hilink", "Hilink kinthill"],
+    id: 2,
+    name: "Dr. Carlos Ruiz",
+    specialty: "Medicina Interna",
+    available: false,
+    email: "carlos.ruiz@vetti.com",
+    phone: "+54 11 2345-6789",
+    location: "Consultorio 102",
+    schedule: "Lun - Vie: 11:00 - 19:00",
+    image: "/placeholder-vet-2.jpg",
+  },
+  {
+    id: 3,
+    name: "Dra. Laura Martínez",
+    specialty: "Dermatología",
+    available: true,
+    email: "laura.martinez@vetti.com",
+    phone: "+54 11 3456-7890",
+    location: "Consultorio 103",
+    schedule: "Mar - Sab: 8:00 - 16:00",
+    image: "/placeholder-vet-3.jpg",
+  },
+  {
+    id: 4,
+    name: "Dr. Juan Pérez",
+    specialty: "Cardiología",
+    available: true,
+    email: "juan.perez@vetti.com",
+    phone: "+54 11 4567-8901",
+    location: "Consultorio 104",
+    schedule: "Lun - Vie: 10:00 - 18:00",
+    image: "/placeholder-vet-4.jpg",
   },
 ];
-
-export const FOOTER_CONTACT_INFO = {
-  title: "Contact Us",
-  links: [
-    { label: "Admin Officer", value: "123-456-7890" },
-    { label: "Email Officer", value: "hilink@akinthil.com" },
-  ],
-};
-
-export const SOCIALS = {
-  title: "Social",
-  links: [
-    "/facebook.svg",
-    "/instagram.svg",
-    "/twitter.svg",
-    "/youtube.svg",
-    "/wordpress.svg",
-  ],
-};
+// Tipos de planes y sus caracteristicas
+export const PRICING_PLANS: PricingPlan[] = [
+  {
+    name: "Plan Gratuito",
+    price: "0",
+    description: "Ideal para comenzar",
+    features: [
+      { name: "Perfil básico de veterinaria", included: true },
+      { name: "Listado en el directorio", included: true },
+      { name: "Hasta 30 citas por mes", included: true },
+      { name: "Gestión básica de turnos", included: true },
+      { name: "Soporte por email", included: true },
+      { name: "Estadísticas básicas", included: true },
+      { name: "Notificaciones push", included: false },
+      { name: "Marketing y promociones", included: false },
+      { name: "Gestión de historias clínicas", included: false },
+    ],
+    buttonText: "Comenzar Gratis",
+    buttonStyle: "border-2 border-blue-500 text-blue-500 hover:bg-blue-50",
+  },
+  {
+    name: "Plan Premium",
+    price: "2.99",
+    description: "Para clínicas que buscan crecer",
+    features: [
+      { name: "Perfil básico de veterinaria", included: true },
+      { name: "Listado en el directorio", included: true },
+      { name: "Citas ilimitadas", included: true },
+      { name: "Gestión avanzada de turnos", included: true },
+      { name: "Soporte prioritario 24/7", included: true },
+      { name: "Estadísticas avanzadas", included: true },
+      { name: "Notificaciones push", included: true },
+      { name: "Marketing y promociones", included: true },
+      { name: "Gestión de historias clínicas", included: true },
+    ],
+    buttonText: "Comenzar 14 días gratis",
+    buttonStyle: "bg-blue-500 text-white hover:bg-blue-600",
+    popular: true,
+  },
+];
+//Menu sideBar Dashboard
+export const MENU_ITEMS: MenuItem[] = [
+  {
+    href: "/login/dashboard",
+    icon: <Home className="h-5 w-5 mr-3" />,
+    title: "Inicio",
+  },
+  {
+    href: "/login/dashboard/vets",
+    icon: <Users className="h-5 w-5 mr-3" />,
+    title: "Lista de Veterinarios",
+  },
+  {
+    href: "/login/dashboard/turnos",
+    icon: <Clock className="h-5 w-5 mr-3" />,
+    title: "Turnos",
+  },
+  {
+    href: "/login/dashboard/citas",
+    icon: <Clipboard className="h-5 w-5 mr-3" />,
+    title: "Citas y Recordatorios",
+  },
+  {
+    href: "/login/dashboard/calendario",
+    icon: <Calendar className="h-5 w-5 mr-3" />,
+    title: "Calendario",
+  },
+  {
+    href: "/login/dashboard/userConfig",
+    icon: <Settings className="h-5 w-5 mr-3" />,
+    title: "Configuración de usuario",
+  },
+];

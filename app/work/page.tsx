@@ -3,11 +3,11 @@ import React from "react";
 
 const Services = () => {
   return (
-    <section className="max-container padding-container lg:flex flex-row size-full">
-      <div className="flex justify-center size-full mb-5">
+    <section className="max-container padding-container mt-10 lg:flex flex-row size-full">
+      <div className="flex justify-center size-full mb-10">
         <Image src="/cards.png" alt="dog&cat" width={600} height={600} />
       </div>
-      <div className="p-3 m-3 regular-14 sm:regular-20">
+      <div className="p-5 m-10 regular-14 sm:regular-20">
         <div>
           <h1 className="bold-16 sm:bold-20">
             Búsqueda por especialidad Médicos Veterinarios
@@ -34,9 +34,12 @@ const Services = () => {
           </p>
         </div>
         <div className="py-2">
-          <h1 className="bold-16 sm:bold-20">FEATURE4</h1>
+          <h1 className="bold-16 sm:bold-20">
+            Informacion sobre especialidad de veterinarios
+          </h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumend.
+            Buscas una especialidad en especial? Con Vetti vas a saber donde se
+            encuentran los veterinarios de un tipo de especialidad en concreto
           </p>
         </div>
       </div>

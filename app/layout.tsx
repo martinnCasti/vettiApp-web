@@ -1,5 +1,4 @@
 "use client";
-import type { Metadata } from "next";
 import "./globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
@@ -15,9 +14,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-slate-400">
+      <body className="bg-slate-400 min-h-screen flex flex-col pt-10">
         <NavbarWrapper />
-        <main className="relative overflow-hidden">{children}</main>
+        <main className="flex-1 flex flex-col">{children}</main>
         {!isDashboard && <Footer />}
       </body>
     </html>

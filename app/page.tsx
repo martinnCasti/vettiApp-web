@@ -6,7 +6,7 @@ const Home = () => {
     <section className="max-container padding-container gap-20 py-10 pb-32 md:gap-28 lg:p-40 ">
       <div className="main-container text-wrap ">
         <h1 className="bold-20 align aling-center lg:bold-40 text-center">
-          VettiApp - Lorem ipsum dolor
+          VettiApp - gestiona tu clinica
         </h1>
         <p className="text-center py-10 px-20 regular-20">
           Tu aplicación de gestión de turnos, diseñada para que los clientes que

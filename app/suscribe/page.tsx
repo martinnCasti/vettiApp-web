@@ -1,6 +1,5 @@
 "use client";
 import { Check, X } from "lucide-react";
-import { PRICING_PLANS } from "@/constants";
 
 const Card = ({
   children,
@@ -17,6 +16,24 @@ const Card = ({
 };
 
 const PricingPage = () => {
+  // Definimos el plan premium directamente para evitar errores
+  const premiumPlan = {
+    name: "Plan Premium",
+    price: "29.99",
+    description: "Para clínicas que buscan crecer",
+    features: [
+      { name: "Perfil básico de veterinaria", included: true },
+      { name: "Listado en el directorio", included: true },
+      { name: "Citas ilimitadas", included: true },
+      { name: "Gestión avanzada de turnos", included: true },
+      { name: "Soporte prioritario 24/7", included: true },
+      { name: "Estadísticas avanzadas", included: true },
+      { name: "Notificaciones push", included: true },
+      { name: "Marketing y promociones", included: true },
+      { name: "Gestión de historias clínicas", included: true },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-slate-400 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -30,68 +47,42 @@ const PricingPage = () => {
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 max-w-5xl mx-auto">
-          {PRICING_PLANS.map((plan, index) => (
-            <Card
-              key={index}
-              className={`overflow-hidden hover:shadow-lg transition-shadow duration-300 ${
-                plan.popular ? "ring-2 ring-blue-500" : ""
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
-                  Más popular
+        {/* Single Centered Card */}
+        <div className="flex justify-center max-w-2xl mx-auto">
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
+            <div className="p-8">
+              {/* Plan Header */}
+              <div className="mb-8 text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {premiumPlan.name}
+                </h3>
+                <p className="text-gray-600">{premiumPlan.description}</p>
+                <div className="mt-4 flex items-baseline justify-center">
+                  <span className="text-4xl font-extrabold text-gray-900">
+                    ${premiumPlan.price}
+                  </span>
+                  <span className="text-gray-600 ml-2">/mes</span>
                 </div>
-              )}
+              </div>
 
-              <div className="p-8">
-                {/* Plan Header */}
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    {plan.name}
-                  </h3>
-                  <p className="text-gray-600">{plan.description}</p>
-                  <div className="mt-4 flex items-baseline">
-                    <span className="text-4xl font-extrabold text-gray-900">
-                      ${plan.price}
-                    </span>
-                    <span className="text-gray-600 ml-2">/mes</span>
-                  </div>
-                </div>
+              {/* Features List */}
+              <ul className="space-y-4 mb-8 max-w-md mx-auto">
+                {premiumPlan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center text-gray-600">
+                    <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                    <span className="text-gray-900">{feature.name}</span>
+                  </li>
+                ))}
+              </ul>
 
-                {/* Features List */}
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li
-                      key={featureIndex}
-                      className="flex items-center text-gray-600"
-                    >
-                      {feature.included ? (
-                        <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                      ) : (
-                        <X className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                      )}
-                      <span
-                        className={
-                          feature.included ? "text-gray-900" : "text-gray-500"
-                        }
-                      >
-                        {feature.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Action Button */}
-                <button
-                  className={`w-full rounded-lg px-6 py-3 text-center text-lg font-medium transition-colors duration-200 ${plan.buttonStyle}`}
-                >
-                  {plan.buttonText}
+              {/* Action Button */}
+              <div className="max-w-md mx-auto">
+                <button className="w-full rounded-lg px-6 py-3 text-center text-lg font-medium transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
+                  Comenzar 14 días gratis
                 </button>
               </div>
-            </Card>
-          ))}
+            </div>
+          </Card>
         </div>
 
         {/* Additional Info */}

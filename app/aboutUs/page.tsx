@@ -3,23 +3,23 @@ import React from "react";
 const AboutUs = () => {
   const teamMembers = [
     {
-      name: "Camila Carusso",
-      role: "Role/Description",
+      name: "Camila Caruso",
+      role: "UI/UX Funtional",
       image: "/path/to/team-member3.jpg",
     },
     {
       name: "Juan Manuel Luzzi",
-      role: "Role/Description",
+      role: "Backend Developer",
       image: "/path/to/team-member2.jpg",
     },
     {
       name: "Paloma Menendez",
-      role: "Role/Description",
+      role: "Mobile Developer",
       image: "/path/to/team-member1.jpg",
     },
     {
       name: "Martin Castiñeira",
-      role: "Role/Description",
+      role: "Frontend Developer",
       image: "/path/to/team-member4.jpg",
     },
   ];

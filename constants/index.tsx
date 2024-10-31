@@ -99,45 +99,22 @@ export const VETERINARIANS_LIST: Veterinarian[] = [
   },
 ];
 // Tipos de planes y sus caracteristicas
-export const PRICING_PLANS: PricingPlan[] = [
-  {
-    name: "Plan Gratuito",
-    price: "0",
-    description: "Ideal para comenzar",
-    features: [
-      { name: "Perfil básico de veterinaria", included: true },
-      { name: "Listado en el directorio", included: true },
-      { name: "Hasta 30 citas por mes", included: true },
-      { name: "Gestión básica de turnos", included: true },
-      { name: "Soporte por email", included: true },
-      { name: "Estadísticas básicas", included: true },
-      { name: "Notificaciones push", included: false },
-      { name: "Marketing y promociones", included: false },
-      { name: "Gestión de historias clínicas", included: false },
-    ],
-    buttonText: "Comenzar Gratis",
-    buttonStyle: "border-2 border-blue-500 text-blue-500 hover:bg-blue-50",
-  },
-  {
-    name: "Plan Premium",
-    price: "2.99",
-    description: "Para clínicas que buscan crecer",
-    features: [
-      { name: "Perfil básico de veterinaria", included: true },
-      { name: "Listado en el directorio", included: true },
-      { name: "Citas ilimitadas", included: true },
-      { name: "Gestión avanzada de turnos", included: true },
-      { name: "Soporte prioritario 24/7", included: true },
-      { name: "Estadísticas avanzadas", included: true },
-      { name: "Notificaciones push", included: true },
-      { name: "Marketing y promociones", included: true },
-      { name: "Gestión de historias clínicas", included: true },
-    ],
-    buttonText: "Comenzar 14 días gratis",
-    buttonStyle: "bg-blue-500 text-white hover:bg-blue-600",
-    popular: true,
-  },
-];
+export const PREMIUM_PLAN = {
+  name: "Plan Premium",
+  price: "29.99",
+  description: "Para clínicas que buscan crecer",
+  features: [
+    { name: "Perfil básico de veterinaria", included: true },
+    { name: "Listado en el directorio", included: true },
+    { name: "Citas ilimitadas", included: true },
+    { name: "Gestión avanzada de turnos", included: true },
+    { name: "Soporte prioritario 24/7", included: true },
+    { name: "Estadísticas avanzadas", included: true },
+    { name: "Notificaciones push", included: true },
+    { name: "Marketing y promociones", included: true },
+    { name: "Gestión de historias clínicas", included: true },
+  ],
+};
 //Menu sideBar Dashboard
 export const MENU_ITEMS: MenuItem[] = [
   {

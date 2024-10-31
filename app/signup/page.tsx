@@ -85,40 +85,39 @@ const SignUp = () => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Ingrese su nombre"
+              placeholder="Ingrese el nombre nombre de la veterinaria"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="lastName"
+              htmlFor="cuit"
             >
-              Apellido
+              CUIT
             </label>
             <input
               type="text"
-              name="lastName"
-              value={form.lastName}
+              name="CUIT"
+              value={form.dni}
               onChange={handleChange}
-              placeholder="Ingrese su apellido"
+              placeholder="Ingrese su CUIT"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
             >
-              Email
+              Direccion
             </label>
             <input
               type="email"
               name="email"
-              value={form.email}
+              value={form.address}
               onChange={handleChange}
-              placeholder="Ingrese su email"
+              placeholder="Ingrese la direccion"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -161,14 +160,14 @@ const SignUp = () => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="address"
             >
-              Dirección
+              Mail
             </label>
             <input
               type="text"
               name="address"
-              value={form.address}
+              value={form.email}
               onChange={handleChange}
-              placeholder="Ingrese su dirección"
+              placeholder="Ingrese su mail"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -186,23 +185,6 @@ const SignUp = () => {
               value={form.district}
               onChange={handleChange}
               placeholder="Ingrese su distrito"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="dni"
-            >
-              DNI
-            </label>
-            <input
-              type="text"
-              name="dni"
-              value={form.dni}
-              onChange={handleChange}
-              placeholder="Ingrese su DNI"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

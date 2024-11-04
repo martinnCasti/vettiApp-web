@@ -1,6 +1,16 @@
 "use client";
-import { Clock, Mail, Phone, MapPin, Check, X } from "lucide-react";
+import {
+  Clock,
+  Mail,
+  Phone,
+  MapPin,
+  Check,
+  X,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import { VETERINARIANS_LIST, type Veterinarian } from "@/constants";
+import { useRouter } from "next/navigation";
 
 // Componente Card personalizado
 const Card = ({
@@ -18,6 +28,25 @@ const Card = ({
 };
 
 const VeterinariansList = () => {
+  const router = useRouter();
+
+  const handleEdit = (vetId: number) => {
+    router.push(`/login/dashboard/vets/edit/${vetId}`);
+  };
+
+  const handleDelete = async (vetId: number) => {
+    if (window.confirm("¿Está seguro que desea eliminar este veterinario?")) {
+      try {
+        // Aquí irá la lógica de eliminación
+        // await userApi.deleteVet(vetId);
+        // Recargar la lista después de eliminar
+        console.log("Veterinario eliminado:", vetId);
+      } catch (error) {
+        console.error("Error al eliminar veterinario:", error);
+      }
+    }
+  };
+
   return (
     <div className="h-full w-full space-y-6">
       {/* Encabezado */}
@@ -93,11 +122,18 @@ const VeterinariansList = () => {
 
               {/* Botones de acción */}
               <div className="mt-6 flex gap-3">
-                <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                  Ver Perfil
+                <button
+                  onClick={() => handleEdit(vet.id)}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                  Editar
                 </button>
-                <button className="flex-1 px-4 py-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors">
-                  Agendar Cita
+                <button
+                  onClick={() => handleDelete(vet.id)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import api from "./api";
 
 // Interfaces que coinciden con tu API
-export interface User {
+export interface Vet {
   id: number;
   statusCode: number;
   message: string;
@@ -10,16 +10,15 @@ export interface User {
   lastName: string;
   phoneNumber: string;
   role: string;
-  dni: string;
+  cuit: string;
   address: string;
   district: string;
-  pets: any[]; // Puedes definir una interfaz específica para pets si es necesario
 }
 
 export interface LoginResponse {
   access_token: string;
   refresh_token: string;
-  user: User;
+  user: Vet;
 }
 
 export interface LoginRequest {
@@ -31,16 +30,13 @@ export const userApi = {
   // Login
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     try {
-      const response = await api.post<LoginResponse>(
-        "/user/login",
-        credentials
-      );
+      const response = await api.post<LoginResponse>("/vet/login", credentials);
 
       // Guardar datos del usuario en localStorage
       if (response.data.user) {
         localStorage.setItem("userEmail", response.data.user.email);
         localStorage.setItem("userName", response.data.user.name);
-        localStorage.setItem("userLastName", response.data.user.lastName);
+        localStorage.setItem("cuit", response.data.user.lastName);
         localStorage.setItem("userRole", response.data.user.role);
       }
 
@@ -52,25 +48,25 @@ export const userApi = {
   },
 
   // Obtener usuario por email
-  getUserByEmail: async (email: string): Promise<User> => {
+  getVetByEmail: async (email: string): Promise<Vet> => {
     try {
       console.log("Solicitando usuario con email:", email);
-      const response = await api.get(`/user/searchUserByEmail/${email}`);
+      const response = await api.get(`/vet/searchVet/${email}`);
       console.log("Respuesta de la API:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error en getUserByEmail:", error);
+      console.error("Error en getVetByEmail:", error);
       throw error;
     }
   },
 
   // Obtener usuario actual
-  getCurrentUser: async (): Promise<User | null> => {
+  getCurrentUser: async (): Promise<Vet | null> => {
     try {
       const email = localStorage.getItem("userEmail");
       if (!email) return null;
 
-      const response = await api.get(`/user/searchUserByEmail/${email}`);
+      const response = await api.get(`/vet/searchVet/${email}`);
 
       // Si la petición es exitosa, actualizar el localStorage con los datos más recientes
       if (response.data && response.data.statusCode === 200) {
@@ -103,10 +99,10 @@ export const userApi = {
 
   // Registro de usuario
   register: async (
-    userData: Omit<User, "id" | "statusCode" | "message" | "pets">
+    userData: Omit<Vet, "id" | "statusCode" | "message" | "pets">
   ) => {
     try {
-      const response = await api.post("/user/register", userData);
+      const response = await api.post("/vet/register", userData);
       return response.data;
     } catch (error) {
       console.error("Error registering user:", error);
@@ -115,9 +111,9 @@ export const userApi = {
   },
 
   // Actualizar usuario
-  updateUser: async (userId: number, userData: Partial<User>) => {
+  updateUser: async (userId: number, userData: Partial<Vet>) => {
     try {
-      const response = await api.put(`/user/${userId}`, userData);
+      const response = await api.put(`/vet/updateUser/${userId}`, userData);
       return response.data;
     } catch (error) {
       console.error("Error updating user:", error);

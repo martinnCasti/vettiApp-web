@@ -133,11 +133,6 @@ export const MENU_ITEMS: MenuItem[] = [
     title: "Turnos",
   },
   {
-    href: "/login/dashboard/citas",
-    icon: <Clipboard className="h-5 w-5 mr-3" />,
-    title: "Citas y Recordatorios",
-  },
-  {
     href: "/login/dashboard/calendario",
     icon: <Calendar className="h-5 w-5 mr-3" />,
     title: "Calendario",

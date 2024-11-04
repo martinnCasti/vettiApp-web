@@ -16,7 +16,11 @@ interface LoginResponse {
   statusCode: number;
   role: string;
   id: number;
+  email: string;
   name: string;
+  phoneNumber: string;
+  cuit: string;
+  address: string;
 }
 
 const SignIn = () => {
@@ -40,7 +44,7 @@ const SignIn = () => {
     setSuccess(false);
 
     try {
-      const response = await api.post<LoginResponse>("/user/login", form);
+      const response = await api.post<LoginResponse>("/vet/login", form);
       console.log("User signed in successfully:", response.data);
 
       // Guardar tokens
@@ -53,8 +57,12 @@ const SignIn = () => {
 
       // Guardar datos adicionales de la respuesta
       localStorage.setItem("userId", response.data.id.toString());
-      localStorage.setItem("userRole", response.data.role);
-      localStorage.setItem("userName", response.data.name);
+      localStorage.setItem("vetEmail", response.data.email);
+      localStorage.setItem("verName", response.data.name);
+      localStorage.setItem("vetCuit", response.data.cuit);
+      localStorage.setItem("vetAddress", response.data.address);
+      localStorage.setItem("vetPhone", response.data.phoneNumber);
+
       setSuccess(true);
       // Redirigir al dashboard
       router.push("/login/dashboard");

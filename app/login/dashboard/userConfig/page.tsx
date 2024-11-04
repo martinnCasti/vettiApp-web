@@ -1,88 +1,189 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  User as UserIcon,
+  User,
   Mail,
   Phone,
   MapPin,
-  IdCard,
-  User2,
+  Building,
+  CreditCard,
+  Edit,
 } from "lucide-react";
-import { userApi } from "@/src/userApi";
+import { userApi, type Vet } from "@/src/userApi";
+import { useRouter } from "next/navigation";
 
-interface User {
-  id: number;
-  name: string;
-  lastName: string;
-  email: string;
-  role: string;
-}
+const SkeletonLoading = () => (
+  <div className="p-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+      {/* Avatar skeleton */}
+      <div className="flex items-center justify-center mb-8">
+        <div className="bg-gray-200 rounded-full w-24 h-24 animate-pulse"></div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Información Personal skeleton */}
+        <div className="space-y-6">
+          <div className="h-7 bg-gray-200 rounded w-48 animate-pulse mb-6"></div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center space-x-3">
+                <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse mb-2"></div>
+                  <div className="h-5 bg-gray-200 rounded w-36 animate-pulse"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Ubicación y Documentación skeleton */}
+        <div className="space-y-6">
+          <div className="h-7 bg-gray-200 rounded w-48 animate-pulse mb-6"></div>
+          <div className="space-y-4">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex items-center space-x-3">
+                <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse mb-2"></div>
+                  <div className="h-5 bg-gray-200 rounded w-36 animate-pulse"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const UserConfig = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Vet | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchUserData = async () => {
       try {
-        const userEmail = localStorage.getItem("userEmail");
-        if (userEmail) {
-          // Obtener datos frescos de la API
-          const userData = await userApi.getUserByEmail(userEmail);
-          console.log("Datos del usuario:", userData); // Para debugging
+        setIsLoading(true);
+        const userData = await userApi.getCurrentUser();
+
+        if (isMounted && userData) {
+          console.log("Data received:", userData);
           setUser(userData);
         }
       } catch (error) {
         console.error("Error al obtener datos del usuario:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchUserData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+  const handleEdit = () => {
+    if (user?.id) {
+      router.push(`/login/dashboard/userConfig/edit-profile/${user.id}`);
+    }
+  };
+
+  if (isLoading) {
+    return <SkeletonLoading />;
+  }
 
   return (
     <div className="p-6">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
-        <div className="flex items-center justify-center mb-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto relative">
+        {/* Botón de editar */}
+        <button
+          onClick={handleEdit}
+          className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-600 transition-colors"
+        >
+          <Edit className="h-4 w-4" />
+          Editar
+        </button>
+
+        {/* Header con avatar */}
+        <div className="flex items-center justify-center mb-8">
           <div className="bg-blue-100 rounded-full p-4">
-            <UserIcon className="h-16 w-16 text-blue-500" />
+            <User className="h-16 w-16 text-blue-500" />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Información Personal */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Información Personal
+            </h2>
 
-            <div className="flex items-center space-x-3">
-              <User2 className="h-5 w-5 text-gray-500" />
-              <div>
-                <p className="text-sm text-gray-500">Nombre Completo</p>
-                <p className="font-medium">
-                  {user ? `${user.name} ${user.lastName}` : "Cargando..."}
-                </p>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <Building className="h-5 w-5 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Nombre Veterinaria</p>
+                  <p className="font-medium">
+                    {user ? user.name : "No disponible"}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center space-x-3">
-              <Mail className="h-5 w-5 text-gray-500" />
-              <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium">{user?.email}</p>
+              <div className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="font-medium">
+                    {user ? user.email : "No disponible"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Teléfono</p>
+                  <p className="font-medium">
+                    {user ? user.phoneNumber : "No disponible"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Información de Ubicación y Rol */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Ubicación y Rol</h2>
+          {/* Información de Ubicación y Documentación */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Ubicación y Documentación
+            </h2>
 
-            <div className="flex items-center space-x-3">
-              <User2 className="h-5 w-5 text-gray-500" />
-              <div>
-                <p className="text-sm text-gray-500">Rol</p>
-                <p className="font-medium">
-                  {user?.role === "2" ? "Veterinario" : "Usuario"}
-                </p>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <MapPin className="h-5 w-5 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Dirección</p>
+                  <p className="font-medium">
+                    {user ? user.address : "No disponible"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <CreditCard className="h-5 w-5 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">CUIT</p>
+                  <p className="font-medium">
+                    {user ? user.cuit : "No disponible"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

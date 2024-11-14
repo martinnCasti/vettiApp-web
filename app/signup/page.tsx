@@ -93,59 +93,15 @@ const SignUp = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
-          Registro de Veterinaria
+          Registrarse
         </h1>
-
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
+        {error && <div className="text-red-600 mb-4">{error}</div>}
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-green-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-green-700">
-                  ¡Registro exitoso! Redirigiendo...
-                </p>
-              </div>
-            </div>
+          <div className="text-green-600 mb-4">
+            Usuario registrado correctamente!
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Los inputs permanecen iguales, solo agregamos disabled={isLoading} */}
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -158,24 +114,115 @@ const SignUp = () => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              disabled={isLoading}
-              placeholder="Ingrese el nombre de la veterinaria"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
+              placeholder="Ingrese el nombre nombre de la veterinaria"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="cuit"
+            >
+              CUIT
+            </label>
+            <input
+              type="text"
+              name="cuit"
+              value={form.cuit}
+              onChange={handleChange}
+              placeholder="Ingrese su CUIT"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Direccion
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              placeholder="Ingrese la direccion"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          {/* Repetir el patrón para los demás inputs... */}
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Contraseña
+            </label>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Ingrese su contraseña"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="phoneNumber"
+            >
+              Numero de Telefono
+            </label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={form.phoneNumber}
+              onChange={handleChange}
+              placeholder="1212121212"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="address"
+            >
+              Mail
+            </label>
+            <input
+              type="text"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Ingrese su mail"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="district"
+            >
+              Distrito
+            </label>
+            <input
+              type="text"
+              name="district"
+              value={form.district}
+              onChange={handleChange}
+              placeholder="Ingrese su distrito"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className={`w-full font-bold py-2 px-4 rounded-lg ${
-              isLoading
-                ? "bg-indigo-300 cursor-not-allowed"
-                : "bg-indigo-500 hover:bg-indigo-600"
-            } text-white focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+            className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            {isLoading ? "Registrando..." : "Registrarse"}
+            Registrarse
           </button>
         </form>
       </div>

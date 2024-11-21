@@ -11,13 +11,8 @@ export default function EditVetPage({ params }: { params: { id: string } }) {
   const [form, setForm] = useState<Veterinarian>({
     id: 0,
     name: "",
-    specialty: "",
-    email: "",
-    phone: "",
-    location: "",
     schedule: "",
     available: true,
-    image: "",
   });
 
   useEffect(() => {
@@ -111,7 +106,6 @@ export default function EditVetPage({ params }: { params: { id: string } }) {
           <input
             type="text"
             name="specialty"
-            value={form.specialty}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg"
             required
@@ -125,7 +119,6 @@ export default function EditVetPage({ params }: { params: { id: string } }) {
           <input
             type="email"
             name="email"
-            value={form.email}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg"
             required
@@ -139,7 +132,6 @@ export default function EditVetPage({ params }: { params: { id: string } }) {
           <input
             type="tel"
             name="phone"
-            value={form.phone}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg"
             required
@@ -153,7 +145,6 @@ export default function EditVetPage({ params }: { params: { id: string } }) {
           <input
             type="text"
             name="location"
-            value={form.location}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg"
             required

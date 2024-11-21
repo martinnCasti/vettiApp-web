@@ -14,24 +14,37 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
+        // Intentar obtener datos del localStorage primero
+        const localData = {
+          name: localStorage.getItem("userName") || "",
+          email: "",
+          phoneNumber: localStorage.getItem("phoneNumber") || "",
+          address: localStorage.getItem("address") || "",
+          cuit: localStorage.getItem("cuit") || "",
+        };
+
+        setFormData(localData);
+
+        // Intentar obtener datos actualizados del servidor
         const userData = await userApi.getCurrentUser();
         if (userData) {
           setFormData({
-            name: userData.name || "",
-            email: userData.email || "",
-            phoneNumber: userData.phoneNumber || "",
-            address: userData.address || "",
-            cuit: userData.cuit || "",
+            name: userData.name || localData.name,
+            email: userData.email || localData.email,
+            phoneNumber: userData.phoneNumber || localData.phoneNumber,
+            address: userData.address || localData.address,
+            cuit: userData.cuit || localData.cuit,
           });
         }
       } catch (err) {
-        setError("Error al cargar los datos del usuario");
         console.error(err);
+        // No establecemos error aquí ya que tenemos los datos del localStorage
       } finally {
         setIsLoading(false);
       }
@@ -42,12 +55,27 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setSuccessMessage("");
+
     try {
-      await userApi.updateUser(Number(params.id), formData);
-      router.push("/login/dashboard/userConfig"); // Redirige de vuelta al perfil
-      router.refresh(); // Refresca la página para mostrar los datos actualizados
+      const response = await userApi.updateVet(Number(params.id), formData);
+
+      // Actualizar localStorage manualmente
+      localStorage.setItem("userName", formData.name);
+      localStorage.setItem("userEmail", formData.email);
+      localStorage.setItem("phoneNumber", formData.phoneNumber);
+      localStorage.setItem("address", formData.address);
+      localStorage.setItem("cuit", formData.cuit);
+
+      setSuccessMessage("Datos actualizados correctamente");
+
+      // Esperar un momento antes de redirigir
+      setTimeout(() => {
+        router.push("/login/dashboard/userConfig");
+      }, 1500);
     } catch (err) {
-      setError("Error al actualizar los datos");
+      setError("Error al actualizar los datos. Por favor, intente nuevamente.");
       console.error(err);
     }
   };
@@ -60,7 +88,20 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
   };
 
   if (isLoading) {
-    return <div className="p-6 text-center">Cargando...</div>;
+    return (
+      <div className="p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-10 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -74,6 +115,12 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
           </div>
         )}
 
+        {successMessage && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {successMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
@@ -84,6 +131,7 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              placeholder="Ingrese el nombre de la veterinaria"
               className="w-full p-2 border rounded-md"
             />
           </div>
@@ -95,6 +143,7 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Ingrese su email"
               className="w-full p-2 border rounded-md"
             />
           </div>
@@ -104,10 +153,11 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
               Teléfono
             </label>
             <input
-              type="text"
+              type="tel"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
+              placeholder="Ingrese su teléfono"
               className="w-full p-2 border rounded-md"
             />
           </div>
@@ -121,6 +171,7 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
               name="address"
               value={formData.address}
               onChange={handleChange}
+              placeholder="Ingrese su dirección"
               className="w-full p-2 border rounded-md"
             />
           </div>
@@ -132,6 +183,7 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
               name="cuit"
               value={formData.cuit}
               onChange={handleChange}
+              placeholder="Ingrese su CUIT"
               className="w-full p-2 border rounded-md"
             />
           </div>

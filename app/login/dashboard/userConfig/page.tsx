@@ -68,14 +68,36 @@ const UserConfig = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
+        const userId = localStorage.getItem("vetId");
+
+        if (!userId) {
+          router.push("/login");
+          return;
+        }
+
         const userData = await userApi.getCurrentUser();
 
         if (isMounted && userData) {
-          console.log("Data received:", userData);
           setUser(userData);
         }
       } catch (error) {
         console.error("Error al obtener datos del usuario:", error);
+        if (isMounted) {
+          const localData: Vet = {
+            id: parseInt(localStorage.getItem("vetId") || "0"),
+            statusCode: 200,
+            message: "",
+            email: localStorage.getItem("userEmail") || "",
+            name: localStorage.getItem("userName") || "",
+            lastName: localStorage.getItem("userLastName") || "",
+            phoneNumber: localStorage.getItem("phoneNumber") || "",
+            role: localStorage.getItem("userRole") || "",
+            cuit: localStorage.getItem("cuit") || "",
+            address: localStorage.getItem("address") || "",
+            district: localStorage.getItem("district") || "",
+          };
+          setUser(localData);
+        }
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -88,11 +110,12 @@ const UserConfig = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [router]);
 
   const handleEdit = () => {
-    if (user?.id) {
-      router.push(`/login/dashboard/userConfig/edit-profile/${user.id}`);
+    const userId = localStorage.getItem("vetId");
+    if (userId) {
+      router.push(`/login/dashboard/userConfig/edit-profile/${userId}`);
     }
   };
 
@@ -131,9 +154,7 @@ const UserConfig = () => {
                 <Building className="h-5 w-5 text-gray-500" />
                 <div>
                   <p className="text-sm text-gray-500">Nombre Veterinaria</p>
-                  <p className="font-medium">
-                    {user ? user.name : "No disponible"}
-                  </p>
+                  <p className="font-medium">{user?.name || "No disponible"}</p>
                 </div>
               </div>
 
@@ -142,7 +163,7 @@ const UserConfig = () => {
                 <div>
                   <p className="text-sm text-gray-500">Email</p>
                   <p className="font-medium">
-                    {user ? user.email : "No disponible"}
+                    {user?.email || "No disponible"}
                   </p>
                 </div>
               </div>
@@ -152,7 +173,7 @@ const UserConfig = () => {
                 <div>
                   <p className="text-sm text-gray-500">Teléfono</p>
                   <p className="font-medium">
-                    {user ? user.phoneNumber : "No disponible"}
+                    {user?.phoneNumber || "No disponible"}
                   </p>
                 </div>
               </div>
@@ -171,7 +192,7 @@ const UserConfig = () => {
                 <div>
                   <p className="text-sm text-gray-500">Dirección</p>
                   <p className="font-medium">
-                    {user ? user.address : "No disponible"}
+                    {user?.address || "No disponible"}
                   </p>
                 </div>
               </div>
@@ -180,9 +201,7 @@ const UserConfig = () => {
                 <CreditCard className="h-5 w-5 text-gray-500" />
                 <div>
                   <p className="text-sm text-gray-500">CUIT</p>
-                  <p className="font-medium">
-                    {user ? user.cuit : "No disponible"}
-                  </p>
+                  <p className="font-medium">{user?.cuit || "No disponible"}</p>
                 </div>
               </div>
             </div>

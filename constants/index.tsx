@@ -18,13 +18,8 @@ export interface MenuItem {
 export interface Veterinarian {
   id: number;
   name: string;
-  specialty: string;
   available: boolean;
-  email: string;
-  phone: string;
-  location: string;
   schedule: string;
-  image: string;
 }
 // Construccion de Planes
 export interface PlanFeature {
@@ -56,46 +51,26 @@ export const VETERINARIANS_LIST: Veterinarian[] = [
   {
     id: 1,
     name: "Dra. María González",
-    specialty: "Cirugía y Ortopedia",
     available: true,
-    email: "maria.gonzalez@vetti.com",
-    phone: "+54 11 1234-5678",
-    location: "Consultorio 101",
     schedule: "Lun - Vie: 9:00 - 17:00",
-    image: "/placeholder-vet-1.jpg",
   },
   {
     id: 2,
-    name: "Dr. Carlos Ruiz",
-    specialty: "Medicina Interna",
+    name: "Baño de Perros",
     available: false,
-    email: "carlos.ruiz@vetti.com",
-    phone: "+54 11 2345-6789",
-    location: "Consultorio 102",
     schedule: "Lun - Vie: 11:00 - 19:00",
-    image: "/placeholder-vet-2.jpg",
   },
   {
     id: 3,
     name: "Dra. Laura Martínez",
-    specialty: "Dermatología",
     available: true,
-    email: "laura.martinez@vetti.com",
-    phone: "+54 11 3456-7890",
-    location: "Consultorio 103",
     schedule: "Mar - Sab: 8:00 - 16:00",
-    image: "/placeholder-vet-3.jpg",
   },
   {
     id: 4,
     name: "Dr. Juan Pérez",
-    specialty: "Cardiología",
     available: true,
-    email: "juan.perez@vetti.com",
-    phone: "+54 11 4567-8901",
-    location: "Consultorio 104",
     schedule: "Lun - Vie: 10:00 - 18:00",
-    image: "/placeholder-vet-4.jpg",
   },
 ];
 // Tipos de planes y sus caracteristicas

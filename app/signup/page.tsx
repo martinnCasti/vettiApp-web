@@ -33,8 +33,11 @@ const SignUp = () => {
   const [success, setSuccess] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value.trim() });
+    const { name, value, type, checked } = e.target;
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? checked : value.trim(),
+    });
   };
 
   const validateForm = () => {
@@ -49,9 +52,9 @@ const SignUp = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) return "Email inválido";
 
-    const cuitRegex = /^\d{11}$/;
+    const cuitRegex = /^\d{8,10}$/;
     if (!cuitRegex.test(form.cuit))
-      return "CUIT inválido (debe tener 11 dígitos)";
+      return "CUIT inválido (debe tener 10 dígitos)";
 
     return null;
   };
@@ -76,7 +79,7 @@ const SignUp = () => {
 
       // Esperar un momento antes de redirigir
       setTimeout(() => {
-        router.push("/dashboard"); // O la ruta que corresponda a tu dashboard
+        router.push("/dashboard");
       }, 1500);
     } catch (err: any) {
       console.error(
@@ -218,11 +221,48 @@ const SignUp = () => {
             />
           </div>
 
+          {/* <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              ¿Tiene Guardia?
+            </label>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={form.isEmergencyVet}
+                onClick={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    isEmergencyVet: !prev.isEmergencyVet,
+                  }))
+                }
+                className={`
+        relative inline-flex h-6 w-11 items-center rounded-full
+        transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+        ${form.isEmergencyVet ? "bg-indigo-500" : "bg-gray-200"}
+      `}
+              >
+                <span
+                  className={`
+          inline-block h-4 w-4 transform rounded-full bg-white transition
+          ${form.isEmergencyVet ? "translate-x-6" : "translate-x-1"}
+        `}
+                />
+              </button>
+              <span className="text-sm text-gray-700">
+                {form.isEmergencyVet ? "Sí" : "No"}
+              </span>
+            </div>
+          </div> */}
+
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            disabled={isLoading}
+            className={`w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Registrarse
+            {isLoading ? "Registrando..." : "Registrarse"}
           </button>
         </form>
       </div>

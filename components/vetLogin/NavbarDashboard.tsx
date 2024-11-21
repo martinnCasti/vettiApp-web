@@ -27,19 +27,19 @@ const NavbarDashboard = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const userEmail = localStorage.getItem("userEmail");
+        const userId = localStorage.getItem("vetId");
 
-        if (!userEmail) {
-          router.push("/login");
+        if (!userId) {
+          router.push("/login/dashboard");
           return;
         }
 
-        const userData = await userApi.getVetByEmail(userEmail);
+        const userData = await userApi.getVetById(parseInt(userId));
 
         if (userData && userData.statusCode === 200) {
           setUser(userData);
         } else {
-          router.push("/login");
+          router.push("/login/dashboard");
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);

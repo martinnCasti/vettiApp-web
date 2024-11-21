@@ -75,7 +75,6 @@ const VeterinariansList = () => {
                   <h3 className="text-lg font-semibold text-gray-800">
                     {vet.name}
                   </h3>
-                  <p className="text-sm text-gray-600">{vet.specialty}</p>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -102,18 +101,6 @@ const VeterinariansList = () => {
 
               {/* Información de contacto */}
               <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <Mail className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{vet.email}</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Phone className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{vet.phone}</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{vet.location}</span>
-                </div>
                 <div className="flex items-center text-gray-600">
                   <Clock className="w-4 h-4 mr-2" />
                   <span className="text-sm">{vet.schedule}</span>

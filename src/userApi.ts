@@ -26,18 +26,39 @@ export interface LoginRequest {
   password: string;
 }
 
+// Helper para manejar el localStorage
+const storage = {
+  updateUserData: (user: Partial<Vet>) => {
+    // Actualiza solo los campos que vienen en el objeto user
+    if (user.id) localStorage.setItem("vetId", user.id.toString());
+    if (user.email) localStorage.setItem("userEmail", user.email);
+    if (user.name) localStorage.setItem("userName", user.name);
+    if (user.role) localStorage.setItem("userRole", user.role);
+    if (user.cuit) localStorage.setItem("cuit", user.cuit);
+    if (user.address) localStorage.setItem("address", user.address);
+    if (user.district) localStorage.setItem("district", user.district);
+  },
+
+  clearUserData: () => {
+    localStorage.removeItem("vetId");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userLastName");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("cuit");
+    localStorage.removeItem("address");
+    localStorage.removeItem("district");
+  },
+};
+
 export const userApi = {
   // Login
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     try {
       const response = await api.post<LoginResponse>("/vet/login", credentials);
 
-      // Guardar datos del usuario en localStorage
       if (response.data.user) {
-        localStorage.setItem("userEmail", response.data.user.email);
-        localStorage.setItem("userName", response.data.user.name);
-        localStorage.setItem("cuit", response.data.user.lastName);
-        localStorage.setItem("userRole", response.data.user.role);
+        storage.updateUserData(response.data.user);
       }
 
       return response.data;
@@ -48,14 +69,14 @@ export const userApi = {
   },
 
   // Obtener usuario por email
-  getVetByEmail: async (email: string): Promise<Vet> => {
+  getVetById: async (id: number): Promise<Vet> => {
     try {
-      console.log("Solicitando usuario con email:", email);
-      const response = await api.get(`/vet/searchVet/${email}`);
+      console.log("Solicitando usuario con el id:", id);
+      const response = await api.get(`/vet/searchVetById/${id}`);
       console.log("Respuesta de la API:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error en getVetByEmail:", error);
+      console.error("Error en getVetById:", error);
       throw error;
     }
   },
@@ -64,15 +85,16 @@ export const userApi = {
   getCurrentUser: async (): Promise<Vet | null> => {
     try {
       const email = localStorage.getItem("userEmail");
-      if (!email) return null;
+      // Agregamos validación para el ID
+      const id = localStorage.getItem("vetId");
 
-      const response = await api.get(`/vet/searchVet/${email}`);
+      if (!email || !id) return null;
 
-      // Si la petición es exitosa, actualizar el localStorage con los datos más recientes
-      if (response.data && response.data.statusCode === 200) {
-        localStorage.setItem("userName", response.data.name);
-        localStorage.setItem("userLastName", response.data.lastName);
-        localStorage.setItem("userRole", response.data.role);
+      // Cambiamos para usar el ID en lugar del email
+      const response = await api.get(`/vet/searchVetById/${id}`);
+
+      if (response.data) {
+        storage.updateUserData(response.data);
       }
 
       return response.data;
@@ -86,11 +108,7 @@ export const userApi = {
   logout: async () => {
     try {
       await api.post("/auth/logout");
-      // Limpiar localStorage
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userName");
-      localStorage.removeItem("userLastName");
-      localStorage.removeItem("userRole");
+      storage.clearUserData();
     } catch (error) {
       console.error("Error during logout:", error);
       throw error;
@@ -103,6 +121,9 @@ export const userApi = {
   ) => {
     try {
       const response = await api.post("/vet/register", userData);
+      if (response.data) {
+        storage.updateUserData(response.data);
+      }
       return response.data;
     } catch (error) {
       console.error("Error registering user:", error);
@@ -111,14 +132,37 @@ export const userApi = {
   },
 
   // Actualizar usuario
-  updateUser: async (userId: number, userData: Partial<Vet>) => {
+  updateVet: async (userId: number, userData: Partial<Vet>) => {
     try {
-      const response = await api.put(`/vet/updateUser/${userId}`, userData);
+      const response = await api.patch(`/vet/updateVet/${userId}`, userData);
+
+      // Actualizar localStorage con los nuevos datos
+      if (response.data && response.data.statusCode === 200) {
+        storage.updateUserData(response.data);
+
+        // Forzar actualización de datos completos
+        await userApi.getCurrentUser();
+      }
+
       return response.data;
     } catch (error) {
       console.error("Error updating user:", error);
       throw error;
     }
+  },
+
+  // Obtener datos del usuario del localStorage
+  getUserData: () => {
+    return {
+      id: localStorage.getItem("vetId"),
+      email: localStorage.getItem("userEmail"),
+      name: localStorage.getItem("userName"),
+      lastName: localStorage.getItem("userLastName"),
+      role: localStorage.getItem("userRole"),
+      cuit: localStorage.getItem("cuit"),
+      address: localStorage.getItem("address"),
+      district: localStorage.getItem("district"),
+    };
   },
 };
 

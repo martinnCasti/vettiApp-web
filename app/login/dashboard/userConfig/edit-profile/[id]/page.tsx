@@ -12,6 +12,9 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
     address: "",
     cuit: "",
   });
+
+  // Estado para rastrear qué campos han sido modificados
+  const [modifiedFields, setModifiedFields] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -44,7 +47,6 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
         }
       } catch (err) {
         console.error(err);
-        // No establecemos error aquí ya que tenemos los datos del localStorage
       } finally {
         setIsLoading(false);
       }
@@ -59,18 +61,32 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
     setSuccessMessage("");
 
     try {
-      const response = await userApi.updateVet(Number(params.id), formData);
+      // Crear un objeto solo con los campos modificados
+      const updatedData = Object.fromEntries(
+        Array.from(modifiedFields).map((field) => [
+          field,
+          formData[field as keyof typeof formData],
+        ])
+      );
 
-      // Actualizar localStorage manualmente
-      localStorage.setItem("userName", formData.name);
-      localStorage.setItem("userEmail", formData.email);
-      localStorage.setItem("phoneNumber", formData.phoneNumber);
-      localStorage.setItem("address", formData.address);
-      localStorage.setItem("cuit", formData.cuit);
+      const response = await userApi.updateVet(Number(params.id), updatedData);
+
+      // Actualizar solo los campos modificados en localStorage
+      modifiedFields.forEach((field) => {
+        if (formData[field as keyof typeof formData]) {
+          localStorage.setItem(
+            field === "name"
+              ? "userName"
+              : field === "email"
+              ? "userEmail"
+              : field,
+            formData[field as keyof typeof formData]
+          );
+        }
+      });
 
       setSuccessMessage("Datos actualizados correctamente");
 
-      // Esperar un momento antes de redirigir
       setTimeout(() => {
         router.push("/login/dashboard/userConfig");
       }, 1500);
@@ -81,10 +97,13 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Marcar el campo como modificado
+    setModifiedFields((prev) => new Set(prev).add(name));
   };
 
   if (isLoading) {
@@ -122,6 +141,7 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Los inputs permanecen igual */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
               Nombre Veterinaria

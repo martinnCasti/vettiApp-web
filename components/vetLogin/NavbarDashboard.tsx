@@ -5,6 +5,10 @@ import { Menu, X, ChevronDown, User as UserIcon, LogOut } from "lucide-react";
 import { userApi, Vet } from "@/src/userApi";
 import cookie from "js-cookie";
 
+interface NavbarDashboardProps {
+  isDisabled: boolean;
+}
+
 const LoadingScreen = () => {
   return (
     <div className="fixed inset-0 bg-gray-100 flex items-center justify-center z-50">
@@ -16,7 +20,7 @@ const LoadingScreen = () => {
   );
 };
 
-const NavbarDashboard = () => {
+const NavbarDashboard = ({ isDisabled }: NavbarDashboardProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<Vet | null>(null);
@@ -84,10 +88,10 @@ const NavbarDashboard = () => {
 
   return (
     <>
-      <nav className="bg-slate-400 shadow-lg fixed top-0 left-0 right-0 z-50">
+      <nav className="bg-slate-400 shadow-lg fixed top-0 left-0 right-0 z-50 h-16">
         <div className="max-w-[2520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
+            {/* Logo y Estado de cuenta */}
             <div className="flex-shrink-0 flex items-center">
               <img
                 src="/logo.png"
@@ -96,6 +100,11 @@ const NavbarDashboard = () => {
                 height={40}
                 className="h-10 w-auto"
               />
+              {isDisabled && (
+                <span className="ml-2 text-sm text-white bg-yellow-500 px-2 py-1 rounded-full">
+                  Cuenta en revisión
+                </span>
+              )}
             </div>
 
             {/* Desktop Menu */}
@@ -168,8 +177,6 @@ const NavbarDashboard = () => {
           </div>
         )}
       </nav>
-      {/* Spacer para evitar que el contenido se oculte detrás del navbar */}
-      <div className="h-16"></div>
     </>
   );
 };

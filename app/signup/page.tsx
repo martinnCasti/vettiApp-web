@@ -13,6 +13,7 @@ interface CreateUserRequestBody {
   district: string;
   cuit: string;
   role: string;
+  isEmergencyVet: boolean;
 }
 
 const SignUp = () => {
@@ -27,6 +28,7 @@ const SignUp = () => {
     district: "",
     cuit: "",
     role: "2",
+    isEmergencyVet: false,
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +36,24 @@ const SignUp = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    // Manejamos diferentes tipos de entrada apropiadamente
+    let finalValue: string | boolean = value;
+
+    if (type === "checkbox") {
+      finalValue = checked;
+    } else if (name === "cuit" || name === "phoneNumber") {
+      // Solo eliminamos espacios en campos numéricos
+      finalValue = value.trim();
+    } else if (name === "email") {
+      // Eliminamos espacios en email
+      finalValue = value.trim();
+    }
+    // No eliminamos espacios para dirección, nombre y distrito
+
     setForm({
       ...form,
-      [name]: type === "checkbox" ? checked : value.trim(),
+      [name]: finalValue,
     });
   };
 
@@ -79,7 +96,7 @@ const SignUp = () => {
 
       // Esperar un momento antes de redirigir
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/login");
       }, 1500);
     } catch (err: any) {
       console.error(
@@ -221,7 +238,7 @@ const SignUp = () => {
             />
           </div>
 
-          {/* <div className="mb-4">
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               ¿Tiene Guardia?
             </label>
@@ -253,7 +270,7 @@ const SignUp = () => {
                 {form.isEmergencyVet ? "Sí" : "No"}
               </span>
             </div>
-          </div> */}
+          </div>
 
           <button
             type="submit"

@@ -9,6 +9,7 @@ export interface User {
   address?: string;
   district?: string;
   dni?: string;
+  isEmergencyVet?: boolean;
 }
 
 export const getCurrentUser = async (): Promise<User> => {
@@ -34,6 +35,7 @@ export const getCurrentUser = async (): Promise<User> => {
       address: response.data.address,
       district: response.data.district,
       dni: response.data.dni,
+      isEmergencyVet: response.data.isEmergencyVet,
     };
 
     return userData;

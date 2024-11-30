@@ -1,26 +1,3 @@
-import { ReactNode } from "react";
-import {
-  Home,
-  Users,
-  Calendar,
-  Clock,
-  Settings,
-  Clipboard,
-} from "lucide-react";
-
-// Construccion Sidebar
-export interface MenuItem {
-  href: string;
-  icon: ReactNode;
-  title: string;
-}
-// Construccion de veterinarios
-export interface Veterinarian {
-  id: number;
-  name: string;
-  available: boolean;
-  schedule: string;
-}
 // Construccion de Planes
 export interface PlanFeature {
   name: string;
@@ -46,33 +23,6 @@ export const NAV_LINKS = [
   // { href: "/", key: "pricing ", label: "Pricing " },
 ];
 
-// Datos de veterinarios
-export const VETERINARIANS_LIST: Veterinarian[] = [
-  {
-    id: 1,
-    name: "Dra. María González",
-    available: true,
-    schedule: "Lun - Vie: 9:00 - 17:00",
-  },
-  {
-    id: 2,
-    name: "Baño de Perros",
-    available: false,
-    schedule: "Lun - Vie: 11:00 - 19:00",
-  },
-  {
-    id: 3,
-    name: "Dra. Laura Martínez",
-    available: true,
-    schedule: "Mar - Sab: 8:00 - 16:00",
-  },
-  {
-    id: 4,
-    name: "Dr. Juan Pérez",
-    available: true,
-    schedule: "Lun - Vie: 10:00 - 18:00",
-  },
-];
 // Tipos de planes y sus caracteristicas
 export const PREMIUM_PLAN = {
   name: "Plan Premium",
@@ -91,30 +41,37 @@ export const PREMIUM_PLAN = {
   ],
 };
 //Menu sideBar Dashboard
-export const MENU_ITEMS: MenuItem[] = [
+interface MenuItem {
+  name: string;
+  href: string;
+  icon?: React.ReactNode;
+  allowedWhenDisabled: boolean;
+}
+
+export const menuItems: MenuItem[] = [
   {
+    name: "Home",
     href: "/login/dashboard",
-    icon: <Home className="h-5 w-5 mr-3" />,
-    title: "Inicio",
+    allowedWhenDisabled: true,
   },
   {
-    href: "/login/dashboard/vets",
-    icon: <Users className="h-5 w-5 mr-3" />,
-    title: "Lista de Veterinarios",
+    name: "Servicios",
+    href: "/login/dashboard/servicios",
+    allowedWhenDisabled: true,
   },
   {
-    href: "/login/dashboard/turnos",
-    icon: <Clock className="h-5 w-5 mr-3" />,
-    title: "Turnos",
-  },
-  {
+    name: "Calendario",
     href: "/login/dashboard/calendario",
-    icon: <Calendar className="h-5 w-5 mr-3" />,
-    title: "Calendario",
+    allowedWhenDisabled: false,
   },
   {
+    name: "Turnos",
+    href: "/login/dashboard/turnos",
+    allowedWhenDisabled: false,
+  },
+  {
+    name: "Mi Perfil",
     href: "/login/dashboard/userConfig",
-    icon: <Settings className="h-5 w-5 mr-3" />,
-    title: "Configuración de usuario",
+    allowedWhenDisabled: true,
   },
 ];

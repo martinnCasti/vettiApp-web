@@ -2,13 +2,15 @@
 import {
   Users,
   Calendar,
-  Clock,
   Activity,
   ArrowUp,
   ArrowDown,
   Syringe,
   Stethoscope,
 } from "lucide-react";
+import Link from "next/link";
+import { DisabledProps } from "@/types/types";
+import React from "react";
 
 const Card = ({
   children,
@@ -24,7 +26,7 @@ const Card = ({
   );
 };
 
-const Dashboard = () => {
+const Dashboard: React.FC<DisabledProps> = ({ isDisabled = true }) => {
   const stats = [
     {
       title: "Total de Veterinarios",
@@ -41,14 +43,6 @@ const Dashboard = () => {
       change: "+5",
       trend: "up",
       description: "para hoy",
-    },
-    {
-      title: "Turnos Activos",
-      value: "8",
-      icon: <Clock className="w-8 h-8 text-purple-500" />,
-      change: "-1",
-      trend: "down",
-      description: "en este momento",
     },
     {
       title: "Atenciones del Día",
@@ -92,8 +86,6 @@ const Dashboard = () => {
 
   return (
     <div className="h-full w-full max-w-[calc(100vw-16rem)] space-y-6">
-      {" "}
-      {/* Ajustamos el ancho máximo */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <h1 className="text-2xl font-bold text-gray-800">Bienvenido</h1>
         <div className="text-sm text-gray-500">
@@ -105,7 +97,7 @@ const Dashboard = () => {
           })}
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat, index) => (
           <Card
             key={index}
@@ -166,6 +158,16 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+          {/* Botón para ver todos los turnos - solo se muestra si no está disabled */}
+          {!isDisabled && (
+            <div className="mt-4">
+              <Link href="/login/dashboard/turnos">
+                <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                  Ver todos los turnos
+                </button>
+              </Link>
+            </div>
+          )}
         </Card>
 
         <Card className="p-4">

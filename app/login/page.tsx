@@ -21,6 +21,7 @@ interface LoginResponse {
   phoneNumber: string;
   cuit: string;
   address: string;
+  status: string;
 }
 
 const SignIn = () => {
@@ -63,8 +64,11 @@ const SignIn = () => {
       localStorage.setItem("vetAddress", response.data.address);
       localStorage.setItem("vetPhone", response.data.phoneNumber);
 
+      if (response.data.status) {
+        localStorage.setItem("userStatus", response.data.status);
+      }
+
       setSuccess(true);
-      // Redirigir al dashboard
       router.push("/login/dashboard");
     } catch (err: any) {
       console.error(

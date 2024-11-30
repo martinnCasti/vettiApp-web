@@ -14,8 +14,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-slate-400 min-h-screen flex flex-col pt-10">
-        <NavbarWrapper />
+      <body
+        className={`min-h-screen flex flex-col ${
+          !isDashboard && "bg-slate-400 pt-10"
+        }`}
+      >
+        {!isDashboard && <NavbarWrapper />}
         <main className="flex-1 flex flex-col">{children}</main>
         {!isDashboard && <Footer />}
       </body>

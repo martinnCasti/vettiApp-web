@@ -1,5 +1,6 @@
 "use client";
 import { Check, X } from "lucide-react";
+import Link from "next/link";
 
 const Card = ({
   children,
@@ -16,10 +17,9 @@ const Card = ({
 };
 
 const PricingPage = () => {
-  // Definimos el plan premium directamente para evitar errores
   const premiumPlan = {
     name: "Plan Premium",
-    price: "29.99",
+    price: "19.99", // Actualizado al precio de la imagen
     description: "Para clínicas que buscan crecer",
     features: [
       { name: "Perfil básico de veterinaria", included: true },
@@ -40,19 +40,16 @@ const PricingPage = () => {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
-            Planes y Precios
+            Asociate con un solo clic
           </h2>
-          <p className="text-xl text-gray-600">
-            Elija el plan que mejor se adapte a sus necesidades
-          </p>
         </div>
 
         {/* Single Centered Card */}
         <div className="flex justify-center max-w-2xl mx-auto">
           <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
-            <div className="p-8">
+            <div className="p-8 flex flex-col items-center">
               {/* Plan Header */}
-              <div className="mb-8 text-center">
+              <div className="mb-8 text-center w-full">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   {premiumPlan.name}
                 </h3>
@@ -61,25 +58,32 @@ const PricingPage = () => {
                   <span className="text-4xl font-extrabold text-gray-900">
                     ${premiumPlan.price}
                   </span>
-                  <span className="text-gray-600 ml-2">/mes</span>
+                  <span className="text-gray-600 ml-1">/mes</span>
                 </div>
               </div>
 
               {/* Features List */}
-              <ul className="space-y-4 mb-8 max-w-md mx-auto">
+              <ul className="space-y-4 mb-8 w-full max-w-md">
                 {premiumPlan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-600">
-                    <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-gray-900">{feature.name}</span>
+                  <li
+                    key={index}
+                    className="flex items-center justify-center text-gray-600"
+                  >
+                    <div className="flex items-center w-full max-w-xs">
+                      <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                      <span className="text-gray-900">{feature.name}</span>
+                    </div>
                   </li>
                 ))}
               </ul>
 
               {/* Action Button */}
-              <div className="max-w-md mx-auto">
-                <button className="w-full rounded-lg px-6 py-3 text-center text-lg font-medium transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
-                  Comenzar 14 días gratis
-                </button>
+              <div className="w-full max-w-md">
+                <Link href="/signup" className="block w-full">
+                  <button className="w-full rounded-lg px-6 py-3 text-center text-lg font-medium transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
+                    Comenzar 14 días gratis
+                  </button>
+                </Link>
               </div>
             </div>
           </Card>

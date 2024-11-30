@@ -1,24 +1,47 @@
+// components/vetLogin/Sidebar.tsx
+import { menuItems } from "@/constants";
 import Link from "next/link";
-import { MENU_ITEMS } from "@/constants";
 
-const Sidebar = () => {
+interface SidebarProps {
+  isDisabled: boolean;
+}
+
+const Sidebar = ({ isDisabled }: SidebarProps) => {
   return (
-    <div className="w-64 bg-slate-400 shadow-lg fixed top-16 bottom-0 left-0">
-      <nav className="h-full overflow-y-auto">
-        <ul className="space-y-2 py-4">
-          {MENU_ITEMS.map((item) => (
-            <li key={item.href}>
+    <div className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-lg">
+      <div className="flex flex-col h-full">
+        {menuItems.map((item) => {
+          const isAllowed = !isDisabled || item.allowedWhenDisabled;
+
+          return (
+            <div
+              key={item.href}
+              className={`relative ${!isAllowed ? "opacity-50" : ""}`}
+            >
               <Link
-                href={item.href}
-                className="flex items-center px-6 py-3 text-gray-700 hover:bg-slate-300 hover:text-gray-900 transition-colors duration-200"
+                href={isAllowed ? item.href : "#"}
+                onClick={(e) => {
+                  if (!isAllowed) {
+                    e.preventDefault();
+                  }
+                }}
+                className={`
+                  flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100
+                  ${!isAllowed ? "cursor-not-allowed" : "hover:text-indigo-600"}
+                `}
               >
-                <span className="mr-3">{item.icon}</span>
-                <span>{item.title}</span>
+                {item.icon && <span className="mr-3">{item.icon}</span>}
+                <span>{item.name}</span>
+                {!isAllowed && (
+                  <span className="ml-2 text-xs text-gray-500">
+                    (No disponible)
+                  </span>
+                )}
               </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

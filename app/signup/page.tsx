@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/src/api";
+import Link from "next/link";
 
 interface CreateUserRequestBody {
   name: string;
@@ -110,8 +111,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-16">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg my-8">
         <h1 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
           Registrarse
         </h1>
@@ -282,6 +283,15 @@ const SignUp = () => {
             {isLoading ? "Registrando..." : "Registrarse"}
           </button>
         </form>
+        <div className="mt-4 text-center text-gray-600">
+          Ya tenés cuenta?{" "}
+          <Link
+            href="/login"
+            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            Iniciá sesión
+          </Link>
+        </div>
       </div>
     </div>
   );

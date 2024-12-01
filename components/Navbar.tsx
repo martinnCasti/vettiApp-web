@@ -9,7 +9,6 @@ const Navbar = () => {
     <nav className="w-full fixed top-0 z-30 bg-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo Section */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
               <div className="w-[80px] h-[69px] relative">
@@ -23,7 +22,6 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Navigation Links - Centered */}
           <div className="hidden lg:flex items-center justify-center flex-1">
             <ul className="flex space-x-8">
               {NAV_LINKS.map((link) => (
@@ -38,25 +36,23 @@ const Navbar = () => {
             </ul>
           </div>
 
-          {/* Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <Button
               type="button"
-              title="Login"
+              title="Logearse"
               icon="/profile.png"
               variant="btn_dark_green"
               href="/login"
             />
             <Button
               type="button"
-              title="Sign Up"
+              title="Registrate"
               icon="/profile.png"
               variant="btn_dark_green"
               href="/signup"
             />
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="lg:hidden">
             <Image
               src="/menu.svg"

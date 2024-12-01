@@ -1,17 +1,4 @@
 // Construccion de Planes
-export interface PlanFeature {
-  name: string;
-  included: boolean;
-}
-export interface PricingPlan {
-  name: string;
-  price: string;
-  description: string;
-  features: PlanFeature[];
-  buttonText: string;
-  buttonStyle: string;
-  popular?: boolean;
-}
 
 // Navegacion pagina principal
 export const NAV_LINKS = [
@@ -23,10 +10,23 @@ export const NAV_LINKS = [
   // { href: "/", key: "pricing ", label: "Pricing " },
 ];
 
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+}
+export interface PricingPlan {
+  name: string;
+  price: string;
+  description: string;
+  features: PlanFeature[];
+  buttonText?: string; // Hacemos estas propiedades opcionales
+  buttonStyle?: string;
+  popular?: boolean;
+}
 // Tipos de planes y sus caracteristicas
-export const PREMIUM_PLAN = {
+export const PREMIUM_PLAN: PricingPlan = {
   name: "Plan Premium",
-  price: "29.99",
+  price: "$30.000",
   description: "Para clínicas que buscan crecer",
   features: [
     { name: "Perfil básico de veterinaria", included: true },
@@ -39,6 +39,11 @@ export const PREMIUM_PLAN = {
     { name: "Marketing y promociones", included: true },
     { name: "Gestión de historias clínicas", included: true },
   ],
+  // Agregamos estas propiedades
+  buttonText: "Suscribite",
+  buttonStyle:
+    "block w-full rounded-lg px-6 py-3 text-center text-lg font-medium transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+  popular: true,
 };
 //Menu sideBar Dashboard
 interface MenuItem {

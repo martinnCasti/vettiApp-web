@@ -3,10 +3,11 @@ import { useEffect, useState, ReactNode } from "react";
 import NavbarDashboard from "@/components/vetLogin/NavbarDashboard";
 import Sidebar from "@/components/vetLogin/Sidebar";
 import AnalyticsLoader from "@/components/vetLogin/AnalyticsLoader";
-import DisabledBanner from "@/components/vetLogin/DisabledBanner"; // actualizamos la importación
+import DisabledBanner from "@/components/vetLogin/DisabledBanner";
 import { usePathname, useRouter } from "next/navigation";
 import { userApi } from "@/src/userApi";
 import React from "react";
+import PaymentBanner from "@/components/vetLogin/PaymentBanner";
 
 const ALLOWED_DISABLED_ROUTES = [
   "/login/dashboard/servicios",
@@ -20,6 +21,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isPaymentPending, setIsPaymentPending] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -43,6 +45,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
         const status = localStorage.getItem("userStatus");
         setIsDisabled(status === "disabled");
+        setIsPaymentPending(userData.payment === "pending");
         setIsLoading(false);
       } catch (error) {
         console.error("Error validando usuario:", error);
@@ -80,11 +83,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar isDisabled={isDisabled} />
         <main className="pl-64">
           {isDisabled && <DisabledBanner />}
+          {isPaymentPending && <PaymentBanner />}
           <div className="bg-gray-100 min-h-[calc(100vh-4rem)]">
             <div className="p-6">
               {shouldShowContent() ? (
                 React.cloneElement(children as React.ReactElement, {
                   isDisabled,
+                  isPaymentPending,
                 })
               ) : (
                 <div className="text-center p-8">

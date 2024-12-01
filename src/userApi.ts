@@ -13,6 +13,7 @@ export interface Vet {
   cuit: string;
   address: string;
   district: string;
+  payment: string;
 }
 
 export interface LoginResponse {

@@ -7,12 +7,12 @@ export interface Vet {
   message: string;
   email: string;
   name: string;
-  lastName: string;
   phoneNumber: string;
   role: string;
   cuit: string;
   address: string;
   district: string;
+  status: string;
   payment: string;
 }
 
@@ -38,17 +38,20 @@ const storage = {
     if (user.cuit) localStorage.setItem("cuit", user.cuit);
     if (user.address) localStorage.setItem("address", user.address);
     if (user.district) localStorage.setItem("district", user.district);
+    if (user.status) localStorage.setItem("stattus", user.status);
+    if (user.payment) localStorage.setItem("payment", user.payment);
   },
 
   clearUserData: () => {
     localStorage.removeItem("vetId");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
-    localStorage.removeItem("userLastName");
     localStorage.removeItem("userRole");
     localStorage.removeItem("cuit");
     localStorage.removeItem("address");
     localStorage.removeItem("district");
+    localStorage.removeItem("status");
+    localStorage.removeItem("payment");
   },
 };
 

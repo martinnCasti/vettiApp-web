@@ -89,12 +89,13 @@ const UserConfig = () => {
             message: "",
             email: localStorage.getItem("userEmail") || "",
             name: localStorage.getItem("userName") || "",
-            lastName: localStorage.getItem("userLastName") || "",
             phoneNumber: localStorage.getItem("phoneNumber") || "",
             role: localStorage.getItem("userRole") || "",
             cuit: localStorage.getItem("cuit") || "",
             address: localStorage.getItem("address") || "",
             district: localStorage.getItem("district") || "",
+            status: localStorage.getItem("status") || "",
+            payment: localStorage.getItem("payment") || "",
           };
           setUser(localData);
         }

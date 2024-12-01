@@ -2,13 +2,14 @@ import api from "../api";
 
 export interface User {
   name: string;
-  lastName: string;
   email: string;
   role: string;
   phoneNumber?: string;
   address?: string;
   district?: string;
-  dni?: string;
+  cuit?: string;
+  status?: string;
+  payment?: string;
   isEmergencyVet?: boolean;
 }
 
@@ -28,13 +29,14 @@ export const getCurrentUser = async (): Promise<User> => {
     // Asegúrate de que los datos coincidan con la interfaz User
     const userData: User = {
       name: response.data.name,
-      lastName: response.data.lastName,
       email: response.data.email,
       role: response.data.role,
       phoneNumber: response.data.phoneNumber,
       address: response.data.address,
       district: response.data.district,
-      dni: response.data.dni,
+      cuit: response.data.cuit,
+      status: response.data.status,
+      payment: response.data.payment,
       isEmergencyVet: response.data.isEmergencyVet,
     };
 

@@ -1,6 +1,8 @@
+// services/userServices.ts
+import { AxiosError } from "axios";
 import api from "../api";
 
-export interface User {
+export interface Vet {
   name: string;
   email: string;
   role: string;
@@ -13,21 +15,37 @@ export interface User {
   isEmergencyVet?: boolean;
 }
 
-export const getCurrentUser = async (): Promise<User> => {
+export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
     if (!userEmail) {
       throw new Error("No user email found");
     }
 
-    const response = await api.get("/user/searchUserByEmail", {
-      params: {
-        email: userEmail,
-      },
-    });
+    const response = await api.get(`/vet/searchVetByEmail/${userEmail}`);
 
-    // Asegúrate de que los datos coincidan con la interfaz User
-    const userData: User = {
+    const isEnabled =
+      response.data.status === "enabled" && response.data.payment === "pay";
+
+    return isEnabled;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    console.error("Error checking subscription:", axiosError);
+    return false;
+  }
+};
+
+export const getCurrentUser = async (): Promise<Vet> => {
+  try {
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
+      throw new Error("No user email found");
+    }
+
+    // También actualizamos esta ruta
+    const response = await api.get(`/vet/searchVetByEmail/${userEmail}`);
+
+    const userData: Vet = {
       name: response.data.name,
       email: response.data.email,
       role: response.data.role,
@@ -43,16 +61,6 @@ export const getCurrentUser = async (): Promise<User> => {
     return userData;
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    throw error;
-  }
-};
-
-export const logoutUser = async (): Promise<void> => {
-  try {
-    // Aquí puedes agregar la llamada a tu API de logout si existe
-    localStorage.removeItem("userEmail");
-  } catch (error) {
-    console.error("Error during logout:", error);
     throw error;
   }
 };

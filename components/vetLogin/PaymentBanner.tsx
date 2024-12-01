@@ -1,6 +1,12 @@
 import PaymentButton from "./PaymentButton";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 const PaymentBanner = () => {
+  const { isPaymentPending, loading } = useSubscriptionStatus();
+
+  // Solo mostrar si el pago está pendiente
+  if (loading || !isPaymentPending) return null;
+
   return (
     <div className="px-6 py-4 bg-gray-100">
       <div className="bg-red-100 py-2 px-4 rounded-lg border border-red-400">

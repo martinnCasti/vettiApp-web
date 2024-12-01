@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 declare global {
   interface Window {
-    $MPC_loaded: boolean;
-    attachEvent: any;
+    $MPC_loaded?: boolean;
+    attachEvent?: (event: string, callback: () => void) => void;
   }
 }
 
@@ -19,6 +20,8 @@ const PaymentButton = ({
   children,
   planId,
 }: PaymentButtonProps) => {
+  const { checkStatus } = useSubscriptionStatus();
+
   useEffect(() => {
     function $MPC_load() {
       if (!window.$MPC_loaded) {
@@ -42,6 +45,8 @@ const PaymentButton = ({
 
     function handleSubscriptionMessage(event: MessageEvent) {
       console.log("Subscription event:", event.data);
+      // Verificar el estado después de recibir un mensaje de la suscripción
+      checkStatus();
     }
 
     window.addEventListener("message", handleSubscriptionMessage);
@@ -49,10 +54,10 @@ const PaymentButton = ({
     return () => {
       window.removeEventListener("message", handleSubscriptionMessage);
     };
-  }, []);
+  }, [checkStatus]);
 
   const userId =
-    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    typeof window !== "undefined" ? localStorage.getItem("vetId") : null;
 
   return (
     <a

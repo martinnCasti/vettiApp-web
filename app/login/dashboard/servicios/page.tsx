@@ -10,8 +10,9 @@ import {
   InfoIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import ServicesPageSkeleton from "@/components/vetLogin/Loadings/ServiceLoading";
 
-// Tipos
 interface Service {
   id: number;
   name: string;
@@ -20,29 +21,6 @@ interface Service {
   description: string;
   active: boolean;
 }
-
-// Datos de ejemplo (después podrías reemplazarlo por datos reales de tu API)
-const SERVICES_LIST: Service[] = [
-  {
-    id: 1,
-    name: "Consulta General",
-    timeAvailability: "9:00 AM - 6:00 PM",
-    daysAvailable: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-    description:
-      "Consulta veterinaria general para revisión y diagnóstico de mascotas",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Vacunación",
-    timeAvailability: "10:00 AM - 4:00 PM",
-    daysAvailable: ["Lunes", "Miércoles", "Viernes"],
-    description:
-      "Servicio de vacunación y refuerzos para mascotas según calendario",
-    active: true,
-  },
-];
-
 const Card = ({
   children,
   className = "",
@@ -59,6 +37,7 @@ const Card = ({
 
 const ServicesList = () => {
   const router = useRouter();
+  const { loading } = useSubscriptionStatus();
 
   const handleEdit = (serviceId: number) => {
     router.push(`/login/dashboard/services/edit/${serviceId}`);
@@ -67,7 +46,6 @@ const ServicesList = () => {
   const handleDelete = async (serviceId: number) => {
     if (window.confirm("¿Está seguro que desea eliminar este servicio?")) {
       try {
-        // Aquí irá la lógica de eliminación
         console.log("Servicio eliminado:", serviceId);
       } catch (error) {
         console.error("Error al eliminar servicio:", error);
@@ -79,9 +57,31 @@ const ServicesList = () => {
     router.push("/login/dashboard/servicios/create");
   };
 
+  if (loading) {
+    return <ServicesPageSkeleton />;
+  }
+  const SERVICES_LIST: Service[] = [
+    {
+      id: 1,
+      name: "Consulta General",
+      timeAvailability: "9:00 AM - 6:00 PM",
+      daysAvailable: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+      description:
+        "Consulta veterinaria general para revisión y diagnóstico de mascotas",
+      active: true,
+    },
+    {
+      id: 2,
+      name: "Vacunación",
+      timeAvailability: "10:00 AM - 4:00 PM",
+      daysAvailable: ["Lunes", "Miércoles", "Viernes"],
+      description:
+        "Servicio de vacunación y refuerzos para mascotas según calendario",
+      active: true,
+    },
+  ];
   return (
     <div className="h-full w-full space-y-6">
-      {/* Encabezado con botón de agregar */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">
@@ -100,7 +100,6 @@ const ServicesList = () => {
         </button>
       </div>
 
-      {/* Grid de tarjetas de servicios */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {SERVICES_LIST.map((service) => (
           <Card
@@ -108,7 +107,6 @@ const ServicesList = () => {
             className="overflow-hidden hover:shadow-lg transition-shadow duration-300"
           >
             <div className="p-6">
-              {/* Encabezado de la tarjeta */}
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
@@ -138,7 +136,6 @@ const ServicesList = () => {
                 </span>
               </div>
 
-              {/* Información del servicio */}
               <div className="space-y-3">
                 <div className="flex items-center text-gray-600">
                   <Clock className="w-4 h-4 mr-2" />
@@ -165,7 +162,6 @@ const ServicesList = () => {
                 </div>
               </div>
 
-              {/* Botones de acción */}
               <div className="mt-6 flex gap-3">
                 <button
                   onClick={() => handleEdit(service.id)}

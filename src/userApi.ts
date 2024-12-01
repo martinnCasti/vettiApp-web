@@ -27,7 +27,6 @@ export interface LoginRequest {
   password: string;
 }
 
-// Helper para manejar el localStorage
 const storage = {
   updateUserData: (user: Partial<Vet>) => {
     // Actualiza solo los campos que vienen en el objeto user

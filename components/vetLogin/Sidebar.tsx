@@ -1,12 +1,16 @@
 // components/vetLogin/Sidebar.tsx
 import { menuItems } from "@/constants";
 import Link from "next/link";
+import { useSubscriptionStatus } from "../../hooks/useSubscriptionStatus";
+import SidebarSkeleton from "@/components/vetLogin/Loadings/SidebarLoading";
 
-interface SidebarProps {
-  isDisabled: boolean;
-}
+const Sidebar = () => {
+  const { isDisabled, loading } = useSubscriptionStatus();
 
-const Sidebar = ({ isDisabled }: SidebarProps) => {
+  if (loading) {
+    return <SidebarSkeleton />;
+  }
+
   return (
     <div className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-lg">
       <div className="flex flex-col h-full">

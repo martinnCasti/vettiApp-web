@@ -1,13 +1,13 @@
 "use client";
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, ReactNode } from "react";
 import NavbarDashboard from "@/components/vetLogin/NavbarDashboard";
 import Sidebar from "@/components/vetLogin/Sidebar";
-import AnalyticsLoader from "@/components/vetLogin/AnalyticsLoader";
 import DisabledBanner from "@/components/vetLogin/DisabledBanner";
 import { usePathname, useRouter } from "next/navigation";
 import { userApi } from "@/src/userApi";
 import React from "react";
 import PaymentBanner from "@/components/vetLogin/PaymentBanner";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 const ALLOWED_DISABLED_ROUTES = [
   "/login/dashboard/servicios",
@@ -20,11 +20,10 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isPaymentPending, setIsPaymentPending] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+  const { isStatusDisabled, isPaymentPending, checkStatus } =
+    useSubscriptionStatus();
 
   useEffect(() => {
     const validateUser = async () => {
@@ -43,10 +42,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           return;
         }
 
-        const status = localStorage.getItem("userStatus");
-        setIsDisabled(status === "disabled");
-        setIsPaymentPending(userData.payment === "pending");
-        setIsLoading(false);
+        // Actualizar el estado global
+        checkStatus();
       } catch (error) {
         console.error("Error validando usuario:", error);
         router.push("/login");
@@ -54,43 +51,32 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     };
 
     validateUser();
-  }, [router]);
+  }, [router, checkStatus]);
 
   const isRouteAllowed = () => {
-    if (!isDisabled) return true;
+    if (!isStatusDisabled) return true;
     return ALLOWED_DISABLED_ROUTES.some((route) => pathname?.startsWith(route));
   };
 
   const shouldShowContent = () => {
-    if (pathname === "/login/dashboard" && isDisabled) {
+    if (pathname === "/login/dashboard" && isStatusDisabled) {
       return true;
     }
     return isRouteAllowed();
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <AnalyticsLoader />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-white">
-      <NavbarDashboard isDisabled={isDisabled} />
+      <NavbarDashboard />
       <div className="pt-16">
-        <Sidebar isDisabled={isDisabled} />
+        <Sidebar />
         <main className="pl-64">
-          {isDisabled && <DisabledBanner />}
-          {isPaymentPending && <PaymentBanner />}
+          <DisabledBanner />
+          <PaymentBanner />
           <div className="bg-gray-100 min-h-[calc(100vh-4rem)]">
             <div className="p-6">
               {shouldShowContent() ? (
-                React.cloneElement(children as React.ReactElement, {
-                  isDisabled,
-                  isPaymentPending,
-                })
+                children
               ) : (
                 <div className="text-center p-8">
                   <h2 className="text-xl font-semibold text-gray-700">

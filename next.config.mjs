@@ -31,7 +31,7 @@ const nextConfig = {
                 "https://www.google-analytics.com " +
                 "https://ssl.google-analytics.com;",
 
-              // Estilos permitidos - Añadido 'unsafe-inline' para resolver el error
+              // Estilos permitidos
               "style-src 'self' 'unsafe-inline' " +
                 "https://*.calendly.com " +
                 "https://assets.calendly.com " +
@@ -101,7 +101,6 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
-          // Agregamos un header adicional para mayor seguridad
           {
             key: "X-Content-Type-Options",
             value: "nosniff",
@@ -111,22 +110,17 @@ const nextConfig = {
     ];
   },
 
-  // Optimizaciones adicionales
   poweredByHeader: false,
   reactStrictMode: true,
 
-  // Configuración de caché y optimización
+  // Deshabilitamos optimizeCss para evitar problemas con critters
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     scrollRestoration: true,
   },
 
-  // Configuración de imágenes si las usas
   images: {
-    domains: [
-      "assets.calendly.com",
-      // Agrega aquí otros dominios de imágenes que necesites
-    ],
+    domains: ["assets.calendly.com"],
   },
 };
 

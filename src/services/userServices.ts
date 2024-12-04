@@ -24,6 +24,11 @@ export interface PasswordReset {
   newPassword: string;
 }
 
+export interface PaymentProcessRequest {
+  vetId: number;
+  paymentId: string;
+}
+
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -69,6 +74,17 @@ export const getCurrentUser = async (): Promise<Vet> => {
     return userData;
   } catch (error) {
     console.error("Error fetching user profile:", error);
+    throw error;
+  }
+};
+
+export const processPaymentStatus = async (
+  paymentData: PaymentProcessRequest
+): Promise<void> => {
+  try {
+    await api.post("mercadopago/processPaymentStatus", paymentData);
+  } catch (error) {
+    console.error("Error processing payment:", error);
     throw error;
   }
 };

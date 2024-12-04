@@ -30,10 +30,14 @@ export default function Page() {
 
       console.log("Todos los parámetros:", allParams);
 
+      // Obtener tanto preapproval_id como payment_id
       const preapprovalId = searchParams.get("preapproval_id");
+      const paymentId = searchParams.get("payment_id");
       console.log("Preapproval ID recibido:", preapprovalId);
+      console.log("Payment ID recibido:", paymentId);
 
-      if (preapprovalId) {
+      // Procesar si hay cualquiera de los dos IDs
+      if (preapprovalId || paymentId) {
         setIsProcessingPayment(true);
         try {
           const vetId = localStorage.getItem("vetId");
@@ -42,9 +46,15 @@ export default function Page() {
             throw new Error("No se encontró el ID del veterinario");
           }
 
+          // Procesar el pago usando el ID correspondiente
+          const idToProcess = paymentId || preapprovalId;
+          if (!idToProcess) {
+            throw new Error("No se encontró ID de pago válido");
+          }
+
           await processPaymentStatus({
             vetId: parseInt(vetId),
-            paymentId: preapprovalId,
+            paymentId: idToProcess,
           });
 
           await checkStatus();

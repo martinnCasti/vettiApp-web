@@ -3,6 +3,7 @@ import { useState } from "react";
 import api from "@/src/api";
 import { useRouter } from "next/navigation";
 import cookie from "js-cookie";
+import Link from "next/link";
 
 interface SignInRequestBody {
   email: string;
@@ -143,6 +144,14 @@ const SignIn = () => {
           >
             Iniciar Sesión
           </button>
+          <div className="mt-4 text-center">
+            <Link
+              href="/login/forgot-password"
+              className="text-blue-500 hover:text-blue-600 text-sm font-medium transition duration-200"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
         </form>
       </div>
     </div>

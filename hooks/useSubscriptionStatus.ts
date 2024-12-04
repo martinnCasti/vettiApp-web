@@ -44,7 +44,7 @@ export const useSubscriptionStatus = () => {
       // Solo actualizar si el estado ha cambiado
       const newStatus = {
         isStatusDisabled: response.data.status !== "enabled",
-        isPaymentPending: response.data.payment !== "pay",
+        isPaymentPending: response.data.payment !== "paid",
         loading: false,
       };
 

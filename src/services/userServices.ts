@@ -1,4 +1,3 @@
-// services/userServices.ts
 import { AxiosError } from "axios";
 import api from "../api";
 
@@ -15,6 +14,16 @@ export interface Vet {
   isEmergencyVet?: boolean;
 }
 
+export interface PasswordResetRequest {
+  email: string;
+}
+
+export interface PasswordReset {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -25,7 +34,7 @@ export const checkSubscriptionStatus = async (): Promise<boolean> => {
     const response = await api.get(`/vet/searchVetByEmail/${userEmail}`);
 
     const isEnabled =
-      response.data.status === "enabled" && response.data.payment === "pay";
+      response.data.status === "enabled" && response.data.payment === "paid";
 
     return isEnabled;
   } catch (error) {
@@ -42,7 +51,6 @@ export const getCurrentUser = async (): Promise<Vet> => {
       throw new Error("No user email found");
     }
 
-    // También actualizamos esta ruta
     const response = await api.get(`/vet/searchVetByEmail/${userEmail}`);
 
     const userData: Vet = {
@@ -61,6 +69,26 @@ export const getCurrentUser = async (): Promise<Vet> => {
     return userData;
   } catch (error) {
     console.error("Error fetching user profile:", error);
+    throw error;
+  }
+};
+
+export const requestPasswordReset = async (email: string): Promise<void> => {
+  try {
+    await api.post("api/password/request/email", { email });
+  } catch (error) {
+    console.error("Error requesting password reset:", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async (
+  resetData: PasswordReset
+): Promise<void> => {
+  try {
+    await api.post("api/password/reset", resetData);
+  } catch (error) {
+    console.error("Error resetting password:", error);
     throw error;
   }
 };

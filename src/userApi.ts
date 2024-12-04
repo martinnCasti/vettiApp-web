@@ -118,22 +118,6 @@ export const userApi = {
     }
   },
 
-  // Registro de usuario
-  register: async (
-    userData: Omit<Vet, "id" | "statusCode" | "message" | "pets">
-  ) => {
-    try {
-      const response = await api.post("/vet/register", userData);
-      if (response.data) {
-        storage.updateUserData(response.data);
-      }
-      return response.data;
-    } catch (error) {
-      console.error("Error registering user:", error);
-      throw error;
-    }
-  },
-
   // Actualizar usuario
   updateVet: async (userId: number, userData: Partial<Vet>) => {
     try {

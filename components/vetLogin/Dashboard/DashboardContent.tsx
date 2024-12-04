@@ -30,10 +30,7 @@ const Card = ({
   );
 };
 
-const DashboardContent: React.FC<DashboardContentProps> = ({
-  isDisabled,
-  isPaymentPending,
-}) => {
+const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
   const stats = [
     {
       title: "Total de Veterinarios",

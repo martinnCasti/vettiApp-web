@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, ReactNode } from "react";
-import NavbarDashboard from "@/components/vetLogin/NavbarDashboard";
+import NavbarDashboard from "@/components/vetLogin/Dashboard/NavbarDashboard";
 import Sidebar from "@/components/vetLogin/Sidebar";
 import DisabledBanner from "@/components/vetLogin/DisabledBanner";
 import { usePathname, useRouter } from "next/navigation";
 import { userApi } from "@/src/userApi";
 import React from "react";
-import PaymentBanner from "@/components/vetLogin/PaymentBanner";
+import PaymentBanner from "@/components/vetLogin/Payment/PaymentBanner";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 const ALLOWED_DISABLED_ROUTES = [
@@ -22,8 +22,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { isStatusDisabled, isPaymentPending, checkStatus } =
-    useSubscriptionStatus();
+  const { isStatusDisabled, checkStatus } = useSubscriptionStatus();
 
   useEffect(() => {
     const validateUser = async () => {

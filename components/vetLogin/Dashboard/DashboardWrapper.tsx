@@ -1,31 +1,51 @@
 "use client";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import DashboardContent from "@/components/vetLogin//Dashboard/DashboardContent";
+import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import DashboardContent from "@/components/vetLogin/Dashboard/DashboardContent";
-import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { processPaymentStatus } from "@/src/services/userServices";
 
-export default function DashboardWrapper() {
-  const { isStatusDisabled, isPaymentPending, loading, checkStatus } =
-    useSubscriptionStatus();
+interface PreapprovalData {
+  paymentId: string;
+  status: string;
+}
 
+export default function Page() {
+  const {
+    isStatusDisabled: isDisabled,
+    loading,
+    checkStatus,
+  } = useSubscriptionStatus();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const handlePaymentProcess = async () => {
-      const collectionId = searchParams.get("collection_id");
-      const collectionStatus = searchParams.get("collection_status");
-      const paymentId = searchParams.get("payment_id");
+      const preapprovalParam = searchParams.get("preapproval");
 
-      if (!paymentId || collectionStatus !== "approved") return;
+      if (!preapprovalParam) {
+        return;
+      }
 
       setIsProcessingPayment(true);
       setPaymentError(null);
 
       try {
+        const preapprovalData = JSON.parse(
+          decodeURIComponent(preapprovalParam)
+        );
+        const paymentId = preapprovalData.paymentId;
+        const status = preapprovalData.status;
+
+        console.log("Payment ID:", paymentId);
+        console.log("Status:", status);
+
+        if (!paymentId || status !== "authorized") {
+          throw new Error("Pago no autorizado o ID de pago no encontrado");
+        }
+
         const vetId = localStorage.getItem("vetId");
 
         if (!vetId) {
@@ -63,10 +83,5 @@ export default function DashboardWrapper() {
     );
   }
 
-  return (
-    <DashboardContent
-      isDisabled={isStatusDisabled}
-      isPaymentPending={isPaymentPending}
-    />
-  );
+  return <DashboardContent isDisabled={isDisabled} isPaymentPending={false} />;
 }

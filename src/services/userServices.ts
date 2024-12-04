@@ -29,12 +29,6 @@ export interface PaymentProcessRequest {
   paymentId: string;
 }
 
-export interface MercadoPagoResponse {
-  type: string;
-  paymentId: string;
-  status: string;
-}
-
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");

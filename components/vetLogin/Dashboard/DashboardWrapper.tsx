@@ -5,7 +5,14 @@ import DashboardContent from "@/components/vetLogin/Dashboard/DashboardContent";
 import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { handleMercadoPagoResponse } from "@/src/services/userServices";
+import { processPaymentStatus } from "@/src/services/userServices";
+
+interface PreapprovalData {
+  type: string;
+  id: string;
+  status: string;
+  paymentId: string;
+}
 
 export default function Page() {
   const {
@@ -19,17 +26,38 @@ export default function Page() {
 
   useEffect(() => {
     const processMercadoPagoPayment = async () => {
-      const collection_id = searchParams.get("collection_id");
-      const collection_status = searchParams.get("collection_status");
+      console.log("Procesando pago de Mercado Pago...");
 
-      // Solo procesar si tenemos ID y el estado es approved
-      if (!collection_id || collection_status !== "approved") return;
-
-      setIsProcessingPayment(true);
-      setPaymentError(null);
+      const preapproval = searchParams.get("preapproval");
+      if (!preapproval) {
+        console.log("No hay datos de preapproval");
+        return;
+      }
 
       try {
-        await handleMercadoPagoResponse(searchParams);
+        const preapprovalData: PreapprovalData = JSON.parse(
+          decodeURIComponent(preapproval)
+        );
+        console.log("Datos de preapproval:", preapprovalData);
+
+        if (!preapprovalData.paymentId) {
+          console.log("No se encontró paymentId en los datos");
+          return;
+        }
+
+        setIsProcessingPayment(true);
+        setPaymentError(null);
+
+        const vetId = localStorage.getItem("vetId");
+        if (!vetId) {
+          throw new Error("No se encontró el ID del veterinario");
+        }
+
+        await processPaymentStatus({
+          vetId: parseInt(vetId),
+          paymentId: preapprovalData.paymentId,
+        });
+
         await checkStatus();
       } catch (error) {
         console.error("Error:", error);

@@ -7,6 +7,13 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { processPaymentStatus } from "@/src/services/userServices";
 
+interface MercadoPagoPreapproval {
+  type: string;
+  id: string;
+  status: string;
+  paymentId: string;
+}
+
 export default function Page() {
   const {
     isStatusDisabled: isDisabled,
@@ -19,40 +26,39 @@ export default function Page() {
 
   useEffect(() => {
     const processMercadoPagoPayment = async () => {
-      const paymentId = searchParams.get("payment_id");
-      const status = searchParams.get("status");
+      const preapproval = searchParams.get("preapproval");
+      if (preapproval) {
+        try {
+          const preapprovalData: MercadoPagoPreapproval = JSON.parse(
+            decodeURIComponent(preapproval)
+          );
+          if (
+            preapprovalData.paymentId &&
+            preapprovalData.status === "authorized"
+          ) {
+            setIsProcessingPayment(true);
+            setPaymentError(null);
 
-      console.log("Payment ID:", paymentId);
-      console.log("Status:", status);
+            const vetId = localStorage.getItem("vetId");
+            if (!vetId) {
+              throw new Error("No se encontró el ID del veterinario");
+            }
 
-      if (!paymentId || status !== "approved") {
-        console.log("No hay payment_id o el status no es approved");
-        return;
-      }
+            await processPaymentStatus({
+              vetId: parseInt(vetId),
+              paymentId: preapprovalData.paymentId,
+            });
 
-      setIsProcessingPayment(true);
-      setPaymentError(null);
-
-      try {
-        const vetId = localStorage.getItem("vetId");
-        if (!vetId) {
-          throw new Error("No se encontró el ID del veterinario");
+            await checkStatus();
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          setPaymentError(
+            error instanceof Error ? error.message : "Error desconocido"
+          );
+        } finally {
+          setIsProcessingPayment(false);
         }
-
-        await processPaymentStatus({
-          vetId: parseInt(vetId),
-          paymentId,
-        });
-
-        await checkStatus();
-        console.log("Pago procesado exitosamente");
-      } catch (error) {
-        console.error("Error:", error);
-        setPaymentError(
-          error instanceof Error ? error.message : "Error desconocido"
-        );
-      } finally {
-        setIsProcessingPayment(false);
       }
     };
 

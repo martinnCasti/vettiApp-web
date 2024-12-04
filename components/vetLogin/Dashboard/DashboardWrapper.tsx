@@ -5,7 +5,7 @@ import DashboardContent from "@/components/vetLogin/Dashboard/DashboardContent";
 import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { processPaymentStatus } from "@/src/services/userServices";
+import { handleMercadoPagoResponse } from "@/src/services/userServices";
 
 export default function Page() {
   const {
@@ -18,49 +18,26 @@ export default function Page() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const handlePaymentProcess = async () => {
-      // Crear un objeto Record para almacenar los parámetros
-      const allParams: Record<string, string> = {};
+    const processMercadoPagoPayment = async () => {
+      if (!searchParams.has("preapproval")) return;
 
-      // Iterar sobre los parámetros de manera segura
-      searchParams.forEach((value, key) => {
-        allParams[key] = value;
-        console.log("Parámetro:", key, "Valor:", value);
-      });
+      setIsProcessingPayment(true);
+      setPaymentError(null);
 
-      console.log("Todos los parámetros:", allParams);
-
-      const preapprovalId = searchParams.get("preapproval_id");
-      console.log("Preapproval ID recibido:", preapprovalId);
-
-      if (preapprovalId) {
-        setIsProcessingPayment(true);
-        try {
-          const vetId = localStorage.getItem("vetId");
-
-          if (!vetId) {
-            throw new Error("No se encontró el ID del veterinario");
-          }
-
-          await processPaymentStatus({
-            vetId: parseInt(vetId),
-            paymentId: preapprovalId,
-          });
-
-          await checkStatus();
-          console.log("Pago procesado con éxito");
-        } catch (error) {
-          console.error("Error:", error);
-          setPaymentError(
-            error instanceof Error ? error.message : "Error desconocido"
-          );
-        } finally {
-          setIsProcessingPayment(false);
-        }
+      try {
+        await handleMercadoPagoResponse(searchParams);
+        await checkStatus();
+      } catch (error) {
+        console.error("Error:", error);
+        setPaymentError(
+          error instanceof Error ? error.message : "Error desconocido"
+        );
+      } finally {
+        setIsProcessingPayment(false);
       }
     };
 
-    handlePaymentProcess();
+    processMercadoPagoPayment();
   }, [searchParams, checkStatus]);
 
   if (loading || isProcessingPayment) {

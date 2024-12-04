@@ -29,6 +29,12 @@ export interface PaymentProcessRequest {
   paymentId: string;
 }
 
+export interface MercadoPagoResponse {
+  type: string;
+  paymentId: string;
+  status: string;
+}
+
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -85,6 +91,39 @@ export const processPaymentStatus = async (
     await api.post("mercadopago/processPaymentStatus", paymentData);
   } catch (error) {
     console.error("Error processing payment:", error);
+    throw error;
+  }
+};
+
+export const handleMercadoPagoResponse = async (
+  searchParams: URLSearchParams
+): Promise<void> => {
+  const preapproval = searchParams.get("preapproval");
+
+  if (!preapproval) {
+    throw new Error("No se encontraron datos del pago");
+  }
+
+  try {
+    const preapprovalData = JSON.parse(decodeURIComponent(preapproval));
+    const paymentId = preapprovalData.paymentId;
+    const status = preapprovalData.status;
+
+    if (!paymentId || status !== "authorized") {
+      throw new Error("Pago no autorizado o información incompleta");
+    }
+
+    const vetId = localStorage.getItem("vetId");
+    if (!vetId) {
+      throw new Error("No se encontró el ID del veterinario");
+    }
+
+    await processPaymentStatus({
+      vetId: parseInt(vetId),
+      paymentId,
+    });
+  } catch (error) {
+    console.error("Error processing Mercado Pago response:", error);
     throw error;
   }
 };

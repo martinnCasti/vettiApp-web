@@ -5,7 +5,7 @@ import { useSubscriptionStatus } from "../../hooks/useSubscriptionStatus";
 import SidebarSkeleton from "@/components/vetLogin/Loadings/SidebarLoading";
 
 const Sidebar = () => {
-  const { isDisabled, loading } = useSubscriptionStatus();
+  const { isStatusDisabled: isDisabled, loading } = useSubscriptionStatus();
 
   if (loading) {
     return <SidebarSkeleton />;

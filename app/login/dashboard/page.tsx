@@ -10,6 +10,7 @@ import { processPaymentStatus } from "@/src/services/userServices";
 export default function Page() {
   const { isStatusDisabled, isPaymentPending, loading, checkStatus } =
     useSubscriptionStatus();
+
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const searchParams = useSearchParams();

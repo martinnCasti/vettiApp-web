@@ -7,15 +7,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { processPaymentStatus } from "@/src/services/userServices";
 
-interface MercadoPagoResponse {
-  type: string;
-  id: string;
-  status: string;
-  paymentId: string;
-  collectorId: number;
-  reason: string;
-}
-
 export default function Page() {
   const {
     isStatusDisabled: isDisabled,
@@ -27,52 +18,49 @@ export default function Page() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const processMercadoPagoPayment = async () => {
-      const preapprovalParam = searchParams.get("preapproval");
+    const handlePaymentProcess = async () => {
+      // Crear un objeto Record para almacenar los parámetros
+      const allParams: Record<string, string> = {};
 
-      if (!preapprovalParam) {
-        return;
-      }
+      // Iterar sobre los parámetros de manera segura
+      searchParams.forEach((value, key) => {
+        allParams[key] = value;
+        console.log("Parámetro:", key, "Valor:", value);
+      });
 
-      setIsProcessingPayment(true);
-      setPaymentError(null);
+      console.log("Todos los parámetros:", allParams);
 
-      try {
-        const mercadoPagoData: MercadoPagoResponse = JSON.parse(
-          decodeURIComponent(preapprovalParam)
-        );
-        console.log("Datos de Mercado Pago:", mercadoPagoData);
+      const preapprovalId = searchParams.get("preapproval_id");
+      console.log("Preapproval ID recibido:", preapprovalId);
 
-        if (!mercadoPagoData.paymentId) {
-          throw new Error("No se encontró el ID de pago");
+      if (preapprovalId) {
+        setIsProcessingPayment(true);
+        try {
+          const vetId = localStorage.getItem("vetId");
+
+          if (!vetId) {
+            throw new Error("No se encontró el ID del veterinario");
+          }
+
+          await processPaymentStatus({
+            vetId: parseInt(vetId),
+            paymentId: preapprovalId,
+          });
+
+          await checkStatus();
+          console.log("Pago procesado con éxito");
+        } catch (error) {
+          console.error("Error:", error);
+          setPaymentError(
+            error instanceof Error ? error.message : "Error desconocido"
+          );
+        } finally {
+          setIsProcessingPayment(false);
         }
-
-        if (mercadoPagoData.status !== "authorized") {
-          throw new Error("El pago no está autorizado");
-        }
-
-        const vetId = localStorage.getItem("vetId");
-        if (!vetId) {
-          throw new Error("No se encontró el ID del veterinario");
-        }
-
-        await processPaymentStatus({
-          vetId: parseInt(vetId),
-          paymentId: mercadoPagoData.paymentId,
-        });
-
-        await checkStatus();
-      } catch (error) {
-        console.error("Error procesando el pago:", error);
-        setPaymentError(
-          error instanceof Error ? error.message : "Error desconocido"
-        );
-      } finally {
-        setIsProcessingPayment(false);
       }
     };
 
-    processMercadoPagoPayment();
+    handlePaymentProcess();
   }, [searchParams, checkStatus]);
 
   if (loading || isProcessingPayment) {

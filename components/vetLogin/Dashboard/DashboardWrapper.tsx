@@ -1,15 +1,11 @@
 "use client";
+
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import DashboardContent from "@/components/vetLogin//Dashboard/DashboardContent";
+import DashboardContent from "@/components/vetLogin/Dashboard/DashboardContent";
 import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { processPaymentStatus } from "@/src/services/userServices";
-
-interface PreapprovalData {
-  paymentId: string;
-  status: string;
-}
 
 export default function Page() {
   const {
@@ -23,48 +19,44 @@ export default function Page() {
 
   useEffect(() => {
     const handlePaymentProcess = async () => {
-      const preapprovalParam = searchParams.get("preapproval");
+      // Crear un objeto Record para almacenar los parámetros
+      const allParams: Record<string, string> = {};
 
-      if (!preapprovalParam) {
-        return;
-      }
+      // Iterar sobre los parámetros de manera segura
+      searchParams.forEach((value, key) => {
+        allParams[key] = value;
+        console.log("Parámetro:", key, "Valor:", value);
+      });
 
-      setIsProcessingPayment(true);
-      setPaymentError(null);
+      console.log("Todos los parámetros:", allParams);
 
-      try {
-        const preapprovalData = JSON.parse(
-          decodeURIComponent(preapprovalParam)
-        );
-        const paymentId = preapprovalData.paymentId;
-        const status = preapprovalData.status;
+      const preapprovalId = searchParams.get("preapproval_id");
+      console.log("Preapproval ID recibido:", preapprovalId);
 
-        console.log("Payment ID:", paymentId);
-        console.log("Status:", status);
+      if (preapprovalId) {
+        setIsProcessingPayment(true);
+        try {
+          const vetId = localStorage.getItem("vetId");
 
-        if (!paymentId || status !== "authorized") {
-          throw new Error("Pago no autorizado o ID de pago no encontrado");
+          if (!vetId) {
+            throw new Error("No se encontró el ID del veterinario");
+          }
+
+          await processPaymentStatus({
+            vetId: parseInt(vetId),
+            paymentId: preapprovalId,
+          });
+
+          await checkStatus();
+          console.log("Pago procesado con éxito");
+        } catch (error) {
+          console.error("Error:", error);
+          setPaymentError(
+            error instanceof Error ? error.message : "Error desconocido"
+          );
+        } finally {
+          setIsProcessingPayment(false);
         }
-
-        const vetId = localStorage.getItem("vetId");
-
-        if (!vetId) {
-          throw new Error("No se encontró el ID del veterinario");
-        }
-
-        await processPaymentStatus({
-          vetId: parseInt(vetId),
-          paymentId,
-        });
-
-        await checkStatus();
-      } catch (error) {
-        console.error("Error al procesar el pago:", error);
-        setPaymentError(
-          error instanceof Error ? error.message : "Error desconocido"
-        );
-      } finally {
-        setIsProcessingPayment(false);
       }
     };
 

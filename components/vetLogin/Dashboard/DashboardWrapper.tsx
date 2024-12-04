@@ -19,7 +19,11 @@ export default function Page() {
 
   useEffect(() => {
     const processMercadoPagoPayment = async () => {
-      if (!searchParams.has("preapproval")) return;
+      const collection_id = searchParams.get("collection_id");
+      const collection_status = searchParams.get("collection_status");
+
+      // Solo procesar si tenemos ID y el estado es approved
+      if (!collection_id || collection_status !== "approved") return;
 
       setIsProcessingPayment(true);
       setPaymentError(null);

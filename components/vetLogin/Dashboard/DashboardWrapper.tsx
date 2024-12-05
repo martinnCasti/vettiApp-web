@@ -19,10 +19,7 @@ export default function Page() {
 
   useEffect(() => {
     const handlePaymentProcess = async () => {
-      // Crear un objeto Record para almacenar los parámetros
       const allParams: Record<string, string> = {};
-
-      // Iterar sobre los parámetros de manera segura
       searchParams.forEach((value, key) => {
         allParams[key] = value;
         console.log("Parámetro:", key, "Valor:", value);
@@ -30,14 +27,10 @@ export default function Page() {
 
       console.log("Todos los parámetros:", allParams);
 
-      // Obtener tanto preapproval_id como payment_id
       const preapprovalId = searchParams.get("preapproval_id");
-      const paymentId = searchParams.get("payment_id");
       console.log("Preapproval ID recibido:", preapprovalId);
-      console.log("Payment ID recibido:", paymentId);
 
-      // Procesar si hay cualquiera de los dos IDs
-      if (preapprovalId || paymentId) {
+      if (preapprovalId) {
         setIsProcessingPayment(true);
         try {
           const vetId = localStorage.getItem("vetId");
@@ -45,20 +38,13 @@ export default function Page() {
           if (!vetId) {
             throw new Error("No se encontró el ID del veterinario");
           }
-
-          // Procesar el pago usando el ID correspondiente
-          const idToProcess = paymentId || preapprovalId;
-          if (!idToProcess) {
-            throw new Error("No se encontró ID de pago válido");
-          }
-
           await processPaymentStatus({
             vetId: parseInt(vetId),
-            paymentId: idToProcess,
+            paymentId: preapprovalId,
           });
 
           await checkStatus();
-          console.log("Pago procesado con éxito");
+          console.log("Suscripción procesada con éxito");
         } catch (error) {
           console.error("Error:", error);
           setPaymentError(
@@ -80,7 +66,7 @@ export default function Page() {
   if (paymentError) {
     return (
       <div className="p-4 text-red-600">
-        Error al procesar el pago: {paymentError}
+        Error al procesar la suscripción: {paymentError}
       </div>
     );
   }

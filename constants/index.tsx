@@ -101,7 +101,35 @@ export const VETERINARY_SERVICES = [
   "Microchip y Emisión de certificados",
 ] as const;
 
-export interface PlanFeature {
-  name: string;
-  included: boolean;
-}
+export const SERVICE_DESCRIPTIONS: Record<string, string> = {
+  "Consultas generales":
+    "Evaluación completa del estado de salud de tu mascota, incluyendo examen físico y recomendaciones generales",
+  "Vacunación y/o desparasitación":
+    "Aplicación de vacunas según calendario y tratamientos antiparasitarios internos y externos",
+  "Cardiología veterinaria":
+    "Diagnóstico y tratamiento de enfermedades cardíacas en mascotas",
+  Oftalmología:
+    "Atención especializada en problemas oculares y enfermedades de la visión",
+  Dermatología:
+    "Tratamiento de problemas de piel, alergias y afecciones del pelaje",
+  Neurología: "Diagnóstico y tratamiento de trastornos del sistema nervioso",
+  Oncología:
+    "Diagnóstico y tratamiento de diferentes tipos de cáncer en mascotas",
+  "Ortopedia y traumatología":
+    "Atención de problemas musculoesqueléticos, fracturas y rehabilitación",
+  "Rehabilitación y fisioterapia":
+    "Terapias físicas para recuperación post-operatoria y tratamiento de lesiones",
+  Endocrinología:
+    "Diagnóstico y tratamiento de trastornos hormonales y metabólicos",
+  Cirugías: "Procedimientos quirúrgicos generales y especializados",
+  Castración:
+    "Cirugía de esterilización para prevención de reproducción y beneficios de salud",
+  Radiografías: "Estudios de diagnóstico por imagen para evaluación interna",
+  Ecografías: "Estudios ecográficos para diagnóstico de órganos internos",
+  "Análisis de laboratorio":
+    "Pruebas diagnósticas de sangre, orina y otros estudios clínicos",
+  "Servicios Baño y Corte":
+    "Servicios de higiene y estética para el cuidado de tu mascota",
+  "Microchip y Emisión de certificados":
+    "Identificación electrónica y documentación oficial para mascotas",
+};

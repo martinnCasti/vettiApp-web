@@ -1,5 +1,7 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { SERVICE_DESCRIPTIONS } from "@/constants";
+import { ReactNode } from "react";
 
 export interface Vet {
   name: string;
@@ -29,6 +31,54 @@ export interface PaymentProcessRequest {
   preApprovalId: string;
 }
 
+export interface CalendlyEvent {
+  eventName: string;
+  schedulingUrl: string;
+  vetName: string;
+}
+
+export interface Service {
+  id: number;
+  name: string;
+  timeAvailability: string;
+  daysAvailable: string[];
+  description: string;
+  active: boolean;
+}
+
+export const getVetServices = async (): Promise<Service[]> => {
+  try {
+    const vetId = localStorage.getItem("vetId");
+    if (!vetId) {
+      throw new Error("No se encontró el ID del veterinario");
+    }
+
+    const response = await api.get<CalendlyEvent[]>(
+      `/calendly/vet/eventsById/${vetId}`
+    );
+
+    return response.data.map((event, index) => {
+      const description =
+        SERVICE_DESCRIPTIONS[event.eventName] ||
+        "No hay descripción disponible para este servicio";
+
+      console.log("Nombre del servicio:", event.eventName);
+      console.log("Descripción encontrada:", description);
+
+      return {
+        id: index + 1,
+        name: event.eventName,
+        timeAvailability: "9:00 AM - 6:00 PM",
+        daysAvailable: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+        description,
+        active: true,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching vet services:", error);
+    throw error;
+  }
+};
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -82,7 +132,6 @@ export const processPaymentStatus = async (
   paymentData: PaymentProcessRequest
 ): Promise<void> => {
   try {
-    console.log("TEST", paymentData);
     await api.post("/mercadopago/processPaymentStatus", paymentData);
   } catch (error) {
     console.error("Error processing payment:", error);

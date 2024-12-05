@@ -82,7 +82,7 @@ export const processPaymentStatus = async (
   paymentData: PaymentProcessRequest
 ): Promise<void> => {
   try {
-    await api.post("mercadopago/processPaymentStatus", paymentData);
+    await api.post("/mercadopago/processPaymentStatus", paymentData);
   } catch (error) {
     console.error("Error processing payment:", error);
     throw error;

@@ -15,7 +15,6 @@ const PaymentBanner = () => {
           <PaymentButton
             planId="2c938084934d1f1701937f49f59411e1"
             className="font-semibold text-gray-800 underline"
-            paymentId=""
           >
             Suscribite haciendo clic acá
           </PaymentButton>

@@ -13,14 +13,12 @@ interface PaymentButtonProps {
   className?: string;
   children: React.ReactNode;
   planId: string;
-  paymentId: string;
 }
 
 const PaymentButton = ({
   className = "",
   children,
   planId,
-  paymentId,
 }: PaymentButtonProps) => {
   const { checkStatus } = useSubscriptionStatus();
 
@@ -63,7 +61,7 @@ const PaymentButton = ({
 
   return (
     <a
-      href={`https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=${planId}&paymentId=${paymentId}&external_reference=${userId}`}
+      href={`https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=${planId}&external_reference=${userId}`}
       className={className}
       data-mp-button="true"
     >

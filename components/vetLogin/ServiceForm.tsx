@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Clock, Calendar, X, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import scheduleApi from "@/src/services/scheduleApi";
+import { VETERINARY_SERVICES } from "@/constants";
 
 interface TimeSlot {
   from: string;
@@ -123,17 +124,24 @@ const ServiceForm = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-600 text-sm mb-2">
+            <label className="block text-sm mb-2 text-[#525252]">
               Nombre del Servicio
             </label>
-            <input
-              type="text"
+            <select
               value={serviceName}
               onChange={(e) => setServiceName(e.target.value)}
-              className="w-full p-2 border border-gray-200 rounded-md"
-              placeholder="Ej: Consulta General"
+              className="w-full p-2 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-700 font-[system-ui]"
               required
-            />
+            >
+              <option value="" className="text-gray-500">
+                Seleccione un servicio
+              </option>
+              {VETERINARY_SERVICES.map((service) => (
+                <option key={service} value={service} className="text-gray-700">
+                  {service}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-3">
@@ -147,9 +155,9 @@ const ServiceForm = () => {
                   <button
                     type="button"
                     onClick={() => addTimeSlot(day)}
-                    className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
                   >
-                    <Plus className="w-3 h-3" />
+                    <Plus className="w-4 h-4" />
                     Agregar Horario
                   </button>
                 </div>
@@ -164,12 +172,18 @@ const ServiceForm = () => {
                           onChange={(e) =>
                             updateTimeSlot(day, index, "from", e.target.value)
                           }
-                          className="p-1 border border-gray-200 rounded text-sm w-32"
+                          className="p-1.5 border border-gray-200 rounded text-sm w-32 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent appearance-none cursor-pointer hover:border-gray-300"
                           required
                         >
-                          <option value="">Selecionar</option>
+                          <option value="" className="text-gray-500">
+                            Seleccionar
+                          </option>
                           {timeOptions.map((time) => (
-                            <option key={`from-${time}`} value={time}>
+                            <option
+                              key={`from-${time}`}
+                              value={time}
+                              className="text-gray-700"
+                            >
                               {time}
                             </option>
                           ))}
@@ -180,12 +194,18 @@ const ServiceForm = () => {
                           onChange={(e) =>
                             updateTimeSlot(day, index, "to", e.target.value)
                           }
-                          className="p-1 border border-gray-200 rounded text-sm w-32"
+                          className="p-1.5 border border-gray-200 rounded text-sm w-32 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent appearance-none cursor-pointer hover:border-gray-300"
                           required
                         >
-                          <option value="">Selecionar</option>
+                          <option value="" className="text-gray-500">
+                            Seleccionar
+                          </option>
                           {timeOptions.map((time) => (
-                            <option key={`to-${time}`} value={time}>
+                            <option
+                              key={`to-${time}`}
+                              value={time}
+                              className="text-gray-700"
+                            >
                               {time}
                             </option>
                           ))}

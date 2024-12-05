@@ -80,3 +80,28 @@ export const menuItems: MenuItem[] = [
     allowedWhenDisabled: true,
   },
 ];
+
+export const VETERINARY_SERVICES = [
+  "Consulta general",
+  "Vacunación y/o desparasitación",
+  "Cardiología veterinaria",
+  "Oftalmología",
+  "Dermatología",
+  "Neurología",
+  "Oncología",
+  "Ortopedia y traumatología",
+  "Rehabilitación y fisioterapia",
+  "Endocrinología",
+  "Cirugías",
+  "Castración",
+  "Radiografías",
+  "Ecografías",
+  "Análisis de laboratorio",
+  "Servicios Baño y Corte",
+  "Microchip y Emisión de certificados",
+] as const;
+
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+}

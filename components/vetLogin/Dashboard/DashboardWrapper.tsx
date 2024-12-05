@@ -5,7 +5,10 @@ import DashboardContent from "@/components/vetLogin/Dashboard/DashboardContent";
 import DashboardSkeleton from "@/components/vetLogin/Loadings/DashboardLoading";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { processPaymentStatus } from "@/src/services/userServices";
+import {
+  processPaymentStatus,
+  PaymentProcessRequest,
+} from "@/src/services/userServices";
 
 export default function Page() {
   const {
@@ -19,14 +22,6 @@ export default function Page() {
 
   useEffect(() => {
     const handlePaymentProcess = async () => {
-      const allParams: Record<string, string> = {};
-      searchParams.forEach((value, key) => {
-        allParams[key] = value;
-        console.log("Parámetro:", key, "Valor:", value);
-      });
-
-      console.log("Todos los parámetros:", allParams);
-
       const preapprovalId = searchParams.get("preapproval_id");
       console.log("Preapproval ID recibido:", preapprovalId);
 
@@ -38,17 +33,28 @@ export default function Page() {
           if (!vetId) {
             throw new Error("No se encontró el ID del veterinario");
           }
-          await processPaymentStatus({
-            vetId: parseInt(vetId),
-            paymentId: preapprovalId,
-          });
 
+          const paymentData: PaymentProcessRequest = {
+            vetId: parseInt(vetId),
+            preApprovalId: preapprovalId, // Usando el nombre correcto según la interfaz
+          };
+
+          console.log("Datos a enviar al backend:", paymentData);
+
+          await processPaymentStatus(paymentData);
           await checkStatus();
           console.log("Suscripción procesada con éxito");
-        } catch (error) {
-          console.error("Error:", error);
+        } catch (error: any) {
+          console.error("Error detallado:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status,
+          });
+
           setPaymentError(
-            error instanceof Error ? error.message : "Error desconocido"
+            error.response?.data?.message ||
+              error.message ||
+              "Error desconocido al procesar la suscripción"
           );
         } finally {
           setIsProcessingPayment(false);
@@ -66,7 +72,8 @@ export default function Page() {
   if (paymentError) {
     return (
       <div className="p-4 text-red-600">
-        Error al procesar la suscripción: {paymentError}
+        <h3 className="font-bold mb-2">Error al procesar la suscripción:</h3>
+        <p>{paymentError}</p>
       </div>
     );
   }

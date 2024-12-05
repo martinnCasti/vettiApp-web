@@ -26,7 +26,7 @@ export interface PasswordReset {
 
 export interface PaymentProcessRequest {
   vetId: number;
-  paymentId: string;
+  preApprovalId: string;
 }
 
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
@@ -106,7 +106,7 @@ export const handleMercadoPagoResponse = async (
 
     await processPaymentStatus({
       vetId: parseInt(vetId),
-      paymentId: collection_id,
+      preApprovalId: collection_id, // Ahora coincide con la interfaz
     });
   } catch (error) {
     console.error("Error processing Mercado Pago response:", error);

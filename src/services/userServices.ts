@@ -82,6 +82,7 @@ export const processPaymentStatus = async (
   paymentData: PaymentProcessRequest
 ): Promise<void> => {
   try {
+    console.log("TEST", paymentData);
     await api.post("/mercadopago/processPaymentStatus", paymentData);
   } catch (error) {
     console.error("Error processing payment:", error);
@@ -106,7 +107,7 @@ export const handleMercadoPagoResponse = async (
 
     await processPaymentStatus({
       vetId: parseInt(vetId),
-      preApprovalId: collection_id, // Ahora coincide con la interfaz
+      preApprovalId: collection_id,
     });
   } catch (error) {
     console.error("Error processing Mercado Pago response:", error);

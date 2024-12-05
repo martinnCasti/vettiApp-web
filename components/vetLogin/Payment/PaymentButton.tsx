@@ -45,7 +45,6 @@ const PaymentButton = ({
 
     function handleSubscriptionMessage(event: MessageEvent) {
       console.log("Subscription event:", event.data);
-      // Verificar el estado después de recibir un mensaje de la suscripción
       checkStatus();
     }
 

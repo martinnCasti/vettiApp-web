@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 const AnalyticsLoader = () => {
   useEffect(() => {
-    // Función para cargar scripts de manera segura
     const loadScript = (src: string, id: string) => {
       if (document.getElementById(id)) return;
 
@@ -15,7 +14,6 @@ const AnalyticsLoader = () => {
       script.async = true;
       script.defer = true;
 
-      // Manejar errores de carga silenciosamente
       script.onerror = () => {
         console.log(`Script ${id} no pudo cargarse, continuando sin él`);
       };

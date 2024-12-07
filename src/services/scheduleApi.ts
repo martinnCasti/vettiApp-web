@@ -33,7 +33,12 @@ export interface Appointment {
   eventName: string;
   status: string;
   location: string;
-  invitees: Invitee[];
+  id: string; // Usaremos este en lugar de eventId
+  invitees: {
+    name: string;
+    email: string;
+    status: string;
+  }[];
 }
 
 export const scheduleApi = {

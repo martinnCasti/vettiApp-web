@@ -1,19 +1,29 @@
 "use client";
-import {
-  Users,
-  Calendar,
-  Activity,
-  ArrowUp,
-  ArrowDown,
-  Syringe,
-  Stethoscope,
-} from "lucide-react";
+import { Users, Calendar, Activity, Syringe, Stethoscope } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  getVetEvents,
+  getPendingAppointments,
+  getCompletedAppointments,
+  filterTodayAppointments,
+  type CalendlyEventCount,
+} from "@/src/services/userServices";
+import { type Appointment } from "@/src/services/scheduleApi";
 
 interface DashboardContentProps {
   isDisabled: boolean;
   isPaymentPending: boolean;
+}
+
+interface StatItem {
+  title: string;
+  value: string;
+  icon: JSX.Element;
+  description: string;
+  hideChange?: boolean;
+  showLink?: boolean;
+  requiresEnabled?: boolean;
 }
 
 const Card = ({
@@ -31,64 +41,75 @@ const Card = ({
 };
 
 const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
-  const stats = [
+  const [eventsData, setEventsData] = useState<CalendlyEventCount | null>(null);
+  const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>(
+    []
+  );
+  const [completedAppointments, setCompletedAppointments] = useState<
+    Appointment[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      setIsLoading(true);
+      try {
+        const results = await Promise.all([
+          getVetEvents(),
+          getPendingAppointments(),
+          getCompletedAppointments(),
+        ] as const);
+
+        const [eventsResult, pendingResult, completedResult] = results;
+
+        setEventsData(eventsResult);
+        setPendingAppointments(pendingResult);
+        setCompletedAppointments(completedResult);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar datos");
+        console.error("Error fetching data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
+  const stats: StatItem[] = [
     {
-      title: "Total de Veterinarios",
-      value: "12",
+      title: "Tipo de Servicios",
+      value: eventsData ? String(eventsData.totalEvents) : "-",
       icon: <Users className="w-8 h-8 text-blue-500" />,
-      change: "+2",
-      trend: "up",
-      description: "activos este mes",
+      description: isLoading
+        ? "Cargando..."
+        : error
+        ? "Error al cargar servicios"
+        : `${eventsData?.events.map((e) => e.eventName).join(", ")}`,
+      hideChange: true,
+      showLink: true,
     },
     {
-      title: "Citas Pendientes",
-      value: "24",
+      title: "Turnos Agendados",
+      value: isLoading ? "..." : String(pendingAppointments.length),
       icon: <Calendar className="w-8 h-8 text-green-500" />,
-      change: "+5",
-      trend: "up",
-      description: "para hoy",
+      description: "Turnos pendientes",
       requiresEnabled: true,
     },
     {
       title: "Atenciones del Día",
-      value: "45",
+      value: isLoading
+        ? "..."
+        : String(filterTodayAppointments(completedAppointments).length),
       icon: <Activity className="w-8 h-8 text-orange-500" />,
-      change: "+12",
-      trend: "up",
-      description: "completadas",
+      description: "Completados",
       requiresEnabled: true,
     },
   ];
 
-  const recentAppointments = [
-    {
-      id: 1,
-      petName: "Max",
-      ownerName: "Juan Pérez",
-      service: "Vacunación",
-      time: "14:30",
-      doctor: "Dra. María González",
-      status: "Pendiente",
-    },
-    {
-      id: 2,
-      petName: "Luna",
-      ownerName: "Ana García",
-      service: "Control",
-      time: "15:00",
-      doctor: "Dr. Carlos Ruiz",
-      status: "Confirmada",
-    },
-    {
-      id: 3,
-      petName: "Rocky",
-      ownerName: "Pedro López",
-      service: "Emergencia",
-      time: "15:30",
-      doctor: "Dra. Laura Martínez",
-      status: "En proceso",
-    },
-  ];
+  const todayAppointments = filterTodayAppointments(pendingAppointments);
 
   return (
     <div className="h-full w-full max-w-[calc(100vw-16rem)] space-y-6">
@@ -103,6 +124,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
           })}
         </div>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat, index) => (
           <Card
@@ -111,125 +133,135 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
               stat.requiresEnabled && isDisabled ? "opacity-50" : ""
             }`}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-gray-50 rounded-lg">{stat.icon}</div>
-              <span
-                className={`flex items-center text-sm ${
-                  stat.trend === "up" ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {stat.trend === "up" ? (
-                  <ArrowUp className="w-4 h-4 mr-1" />
-                ) : (
-                  <ArrowDown className="w-4 h-4 mr-1" />
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-gray-50 rounded-lg">{stat.icon}</div>
+              </div>
+              <div className="space-y-2">
+                {" "}
+                <h3 className="text-sm font-medium text-gray-600">
+                  {stat.title}
+                  {stat.requiresEnabled && isDisabled && (
+                    <span className="ml-2 text-xs text-red-500">
+                      (No disponible)
+                    </span>
+                  )}
+                </h3>
+                <p className="text-2xl font-bold">
+                  {stat.requiresEnabled && isDisabled ? "-" : stat.value}
+                </p>
+                <p className="text-xs text-gray-500 mb-8">{stat.description}</p>{" "}
+                {index === 0 && (
+                  <Link
+                    href="/login/dashboard/servicios"
+                    className="block mt-auto"
+                  >
+                    <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                      Ver servicios
+                    </button>
+                  </Link>
                 )}
-                {stat.change}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm font-medium text-gray-600">
-                {stat.title}
-                {stat.requiresEnabled && isDisabled && (
-                  <span className="ml-2 text-xs text-red-500">
-                    (No disponible)
-                  </span>
+                {index === 1 && (
+                  <Link
+                    href="/login/dashboard/turnos"
+                    className="block mt-auto"
+                  >
+                    <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                      Ver turnos
+                    </button>
+                  </Link>
                 )}
-              </h3>
-              <p className="text-2xl font-bold">
-                {stat.requiresEnabled && isDisabled ? "-" : stat.value}
-              </p>
-              <p className="text-xs text-gray-500">{stat.description}</p>
+              </div>
             </div>
           </Card>
         ))}
       </div>
 
       {!isDisabled ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Card className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Próximas Citas</h2>
-              <Stethoscope className="w-5 h-5 text-gray-400" />
+        <div className="grid grid-cols-1 gap-4">
+          <Card className="p-6">
+            {" "}
+            {/* Aumentado el padding */}
+            <div className="flex items-center justify-between mb-6">
+              {" "}
+              {/* Aumentado el margin bottom */}
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Próximos Turnos
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Turnos agendados para hoy
+                </p>
+              </div>
+              <Stethoscope className="w-6 h-6 text-blue-500" />{" "}
+              {/* Cambiado el color y tamaño */}
             </div>
-            <div className="space-y-3">
-              {recentAppointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="flex items-center justify-between p-3 bg-slate-400 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <Syringe className="w-5 h-5 text-black" />
+            <div className="space-y-4">
+              {" "}
+              {/* Aumentado el espacio entre items */}
+              {isLoading ? (
+                <div className="flex justify-center py-8">
+                  <p className="text-gray-500">Cargando turnos...</p>
+                </div>
+              ) : error ? (
+                <div className="flex justify-center py-8">
+                  <p className="text-red-500">{error}</p>
+                </div>
+              ) : todayAppointments.length > 0 ? (
+                todayAppointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 p-2 bg-blue-100 rounded-lg">
+                        <Syringe className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">
+                          {appointment.invitees[0]?.name || "Sin nombre"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {appointment.eventName}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium">{appointment.petName}</p>
-                      <p className="text-sm text-gray-700">
-                        {appointment.service}
+                    <div className="text-right">
+                      <p className="font-semibold text-blue-600">
+                        {new Date(appointment.startTime).toLocaleTimeString(
+                          "es-ES",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {appointment.vetName}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium">{appointment.time}</p>
-                    <p className="text-sm text-gray-700">
-                      {appointment.doctor}
-                    </p>
-                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <Calendar className="w-12 h-12 text-gray-400 mb-3" />
+                  <p className="text-gray-600 font-medium">
+                    No hay turnos pendientes para hoy
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Agenda un nuevo turno para comenzar
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
-            <div className="mt-4">
-              <Link href="/login/dashboard/turnos">
-                <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
-                  Ver todos los turnos
+            <div className="mt-6">
+              {" "}
+              {/* Aumentado el margin top */}
+              <Link href="/login/dashboard/calendario">
+                <button className="w-full bg-blue-500 text-white py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors duration-200 font-medium">
+                  Agendar turno nuevo
                 </button>
               </Link>
-            </div>
-          </Card>
-
-          <Card className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Resumen de Actividad</h2>
-              <Activity className="w-5 h-5 text-gray-400" />
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Citas Completadas</span>
-                  <span className="font-medium">85%</span>
-                </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-green-500 rounded-full"
-                    style={{ width: "85%" }}
-                  ></div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Ocupación de Turnos</span>
-                  <span className="font-medium">72%</span>
-                </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-blue-500 rounded-full"
-                    style={{ width: "72%" }}
-                  ></div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">
-                    Satisfacción de Clientes
-                  </span>
-                  <span className="font-medium">94%</span>
-                </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-purple-500 rounded-full"
-                    style={{ width: "94%" }}
-                  ></div>
-                </div>
-              </div>
             </div>
           </Card>
         </div>

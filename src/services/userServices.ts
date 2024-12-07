@@ -1,8 +1,7 @@
 import { AxiosError } from "axios";
 import api from "../api";
 import { SERVICE_DESCRIPTIONS } from "@/constants";
-import { ReactNode } from "react";
-
+import { Appointment, Invitee } from "@/src/services/scheduleApi";
 export interface Vet {
   name: string;
   email: string;
@@ -44,6 +43,10 @@ export interface Service {
   daysAvailable: string[];
   description: string;
   active: boolean;
+}
+export interface CalendlyEventCount {
+  totalEvents: number;
+  events: CalendlyEvent[];
 }
 
 export const getVetServices = async (): Promise<Service[]> => {
@@ -182,4 +185,73 @@ export const resetPassword = async (
     console.error("Error resetting password:", error);
     throw error;
   }
+};
+export const getVetEvents = async (): Promise<CalendlyEventCount> => {
+  try {
+    const vetId = localStorage.getItem("vetId");
+    if (!vetId) {
+      throw new Error("No se encontró el ID del veterinario");
+    }
+
+    const response = await api.get<CalendlyEvent[]>(
+      `/calendly/vet/eventsById/${vetId}`
+    );
+
+    return {
+      totalEvents: response.data.length,
+      events: response.data,
+    };
+  } catch (error) {
+    console.error("Error fetching vet events:", error);
+    throw error;
+  }
+};
+export const getPendingAppointments = async (): Promise<Appointment[]> => {
+  try {
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
+      throw new Error("No se encontró el email del usuario");
+    }
+
+    const response = await api.get<Appointment[]>(
+      `/calendly/vet/appointments/${userEmail}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener las citas pendientes:", error);
+    throw error;
+  }
+};
+
+export const getCompletedAppointments = async (): Promise<Appointment[]> => {
+  try {
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
+      throw new Error("No se encontró el email del usuario");
+    }
+
+    const response = await api.get<Appointment[]>(
+      `/calendly/vet/appointments/${userEmail}?expired=true`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener las atenciones completadas:", error);
+    throw error;
+  }
+};
+
+// Función de utilidad para filtrar citas del día
+export const filterTodayAppointments = (
+  appointments: Appointment[]
+): Appointment[] => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return appointments.filter((appointment) => {
+    const appointmentDate = new Date(appointment.startTime);
+    appointmentDate.setHours(0, 0, 0, 0);
+    return appointmentDate.getTime() === today.getTime();
+  });
 };

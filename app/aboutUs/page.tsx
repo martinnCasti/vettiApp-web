@@ -18,7 +18,7 @@ const AboutUs = () => {
       case "Juan Manuel Luzzi":
         return "object-top";
       case "Martin Castiñeira":
-        return "object-top";
+        return "object-[center_20%]"; // Ajustado para subir más la imagen
       default:
         return "object-center";
     }

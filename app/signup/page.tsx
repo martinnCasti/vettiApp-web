@@ -94,8 +94,6 @@ const SignUp = () => {
       const response = await api.post("/vet/register", form);
       console.log("Usuario registrado exitosamente:", response.data);
       setSuccess(true);
-
-      // Esperar un momento antes de redirigir
       setTimeout(() => {
         router.push("/login");
       }, 1500);

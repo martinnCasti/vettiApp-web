@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import api from "../api";
 import { SERVICE_DESCRIPTIONS } from "@/constants";
-import { Appointment, Invitee } from "@/src/services/scheduleApi";
+import { Appointment } from "@/src/services/scheduleApi";
 export interface Vet {
   name: string;
   email: string;
@@ -241,8 +241,6 @@ export const getCompletedAppointments = async (): Promise<Appointment[]> => {
     throw error;
   }
 };
-
-// Función de utilidad para filtrar citas del día
 export const filterTodayAppointments = (
   appointments: Appointment[]
 ): Appointment[] => {

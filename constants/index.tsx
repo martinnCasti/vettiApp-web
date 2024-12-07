@@ -183,3 +183,30 @@ export const DISTRICTS = [
   "Villa Soldati",
   "Villa Urquiza",
 ];
+export interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+}
+export const TEAM_MEMBERS: TeamMember[] = [
+  {
+    name: "Camila Caruso",
+    role: "Analista Funcional - UX/UI",
+    image: "/assets/images/cami-caruso.jpg",
+  },
+  {
+    name: "Juan Manuel Luzzi",
+    role: "Desarrollador Backend",
+    image: "/assets/images/juanma-luzzi.jpg",
+  },
+  {
+    name: "Paloma Menendez",
+    role: "Desarrolladora Mobile",
+    image: "",
+  },
+  {
+    name: "Martin Castiñeira",
+    role: "Desarrollador Frontend",
+    image: "/assets/images/martin-casti.jpg",
+  },
+];

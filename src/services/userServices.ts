@@ -43,45 +43,17 @@ export interface Service {
   daysAvailable: string[];
   description: string;
   active: boolean;
+  status: "active" | "pending";
 }
 export interface CalendlyEventCount {
   totalEvents: number;
   events: CalendlyEvent[];
 }
+export interface DeleteServiceRequest {
+  id: number;
+  eventName: string;
+}
 
-export const getVetServices = async (): Promise<Service[]> => {
-  try {
-    const vetId = localStorage.getItem("vetId");
-    if (!vetId) {
-      throw new Error("No se encontró el ID del veterinario");
-    }
-
-    const response = await api.get<CalendlyEvent[]>(
-      `/calendly/vet/eventsById/${vetId}`
-    );
-
-    return response.data.map((event, index) => {
-      const description =
-        SERVICE_DESCRIPTIONS[event.eventName] ||
-        "No hay descripción disponible para este servicio";
-
-      console.log("Nombre del servicio:", event.eventName);
-      console.log("Descripción encontrada:", description);
-
-      return {
-        id: index + 1,
-        name: event.eventName,
-        timeAvailability: "9:00 AM - 6:00 PM",
-        daysAvailable: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-        description,
-        active: true,
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching vet services:", error);
-    throw error;
-  }
-};
 export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -223,7 +195,6 @@ export const getPendingAppointments = async (): Promise<Appointment[]> => {
     throw error;
   }
 };
-
 export const getCompletedAppointments = async (): Promise<Appointment[]> => {
   try {
     const userEmail = localStorage.getItem("userEmail");
@@ -252,4 +223,91 @@ export const filterTodayAppointments = (
     appointmentDate.setHours(0, 0, 0, 0);
     return appointmentDate.getTime() === today.getTime();
   });
+};
+
+const PENDING_SERVICES_KEY = "pendingDeleteServices";
+
+// Función para obtener servicios pendientes
+const getPendingServices = (): string[] => {
+  try {
+    const stored = localStorage.getItem(PENDING_SERVICES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error("Error al obtener servicios pendientes:", error);
+    return [];
+  }
+};
+
+// Función para guardar un servicio como pendiente
+const markServiceAsPending = (serviceName: string) => {
+  try {
+    const pendingServices = getPendingServices();
+    if (!pendingServices.includes(serviceName)) {
+      pendingServices.push(serviceName);
+      localStorage.setItem(
+        PENDING_SERVICES_KEY,
+        JSON.stringify(pendingServices)
+      );
+    }
+  } catch (error) {
+    console.error("Error al marcar servicio como pendiente:", error);
+  }
+};
+
+export const getVetServices = async (): Promise<Service[]> => {
+  try {
+    const vetId = localStorage.getItem("vetId");
+    if (!vetId) {
+      throw new Error("No se encontró el ID del veterinario");
+    }
+
+    const response = await api.get<CalendlyEvent[]>(
+      `/calendly/vet/eventsById/${vetId}`
+    );
+
+    // Obtener servicios pendientes del localStorage
+    const pendingServices = getPendingServices();
+
+    return response.data.map((event, index) => {
+      const description =
+        SERVICE_DESCRIPTIONS[event.eventName] ||
+        "No hay descripción disponible para este servicio";
+
+      // Verificar si el servicio está en la lista de pendientes
+      const isPending = pendingServices.includes(event.eventName);
+
+      return {
+        id: index + 1,
+        name: event.eventName,
+        timeAvailability: "9:00 AM - 6:00 PM",
+        daysAvailable: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+        description,
+        active: !isPending,
+        status: isPending ? "pending" : "active",
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching vet services:", error);
+    throw error;
+  }
+};
+
+export const deleteService = async (eventName: string): Promise<void> => {
+  try {
+    const vetId = localStorage.getItem("vetId");
+    if (!vetId) {
+      throw new Error("No se encontró el ID del veterinario");
+    }
+
+    // Marcar como pendiente antes de la llamada a la API
+    markServiceAsPending(eventName);
+
+    await api.post("/calendly/vet/eventTypes/cancellation", {
+      id: parseInt(vetId),
+      eventName: eventName,
+    });
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    throw error;
+  }
 };

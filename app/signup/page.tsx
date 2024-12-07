@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/src/api";
 import Link from "next/link";
+import { DISTRICTS } from "@/constants/index";
 
 interface CreateUserRequestBody {
   name: string;
@@ -35,22 +36,20 @@ const SignUp = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target as HTMLInputElement;
 
-    // Manejamos diferentes tipos de entrada apropiadamente
     let finalValue: string | boolean = value;
 
     if (type === "checkbox") {
-      finalValue = checked;
+      finalValue = (e.target as HTMLInputElement).checked;
     } else if (name === "cuit" || name === "phoneNumber") {
-      // Solo eliminamos espacios en campos numéricos
       finalValue = value.trim();
     } else if (name === "email") {
-      // Eliminamos espacios en email
       finalValue = value.trim();
     }
-    // No eliminamos espacios para dirección, nombre y distrito
 
     setForm({
       ...form,
@@ -222,19 +221,24 @@ const SignUp = () => {
 
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block font-medium text-base text-gray-700 mb-2"
               htmlFor="district"
             >
               Distrito
             </label>
-            <input
-              type="text"
+            <select
               name="district"
               value={form.district}
               onChange={handleChange}
-              placeholder="Ingrese su distrito"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-base font-normal"
+            >
+              <option value="">Seleccione un distrito</option>
+              {DISTRICTS.map((district) => (
+                <option key={district} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-4">
@@ -253,16 +257,16 @@ const SignUp = () => {
                   }))
                 }
                 className={`
-        relative inline-flex h-6 w-11 items-center rounded-full
-        transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-        ${form.isEmergencyVet ? "bg-indigo-500" : "bg-gray-200"}
-      `}
+                  relative inline-flex h-6 w-11 items-center rounded-full
+                  transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                  ${form.isEmergencyVet ? "bg-indigo-500" : "bg-gray-200"}
+                `}
               >
                 <span
                   className={`
-          inline-block h-4 w-4 transform rounded-full bg-white transition
-          ${form.isEmergencyVet ? "translate-x-6" : "translate-x-1"}
-        `}
+                    inline-block h-4 w-4 transform rounded-full bg-white transition
+                    ${form.isEmergencyVet ? "translate-x-6" : "translate-x-1"}
+                  `}
                 />
               </button>
               <span className="text-sm text-gray-700">

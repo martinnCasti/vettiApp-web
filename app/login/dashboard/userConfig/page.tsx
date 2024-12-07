@@ -181,7 +181,6 @@ const UserConfig = () => {
             </div>
           </div>
 
-          {/* Información de Ubicación y Documentación */}
           <div className="space-y-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">
               Ubicación y Documentación

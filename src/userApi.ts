@@ -2,7 +2,7 @@ import api from "./api";
 
 // Interfaces que coinciden con tu API
 export interface Vet {
-  calendlyCalendar: string;
+  calendlyCalendar?: string;
   id: number;
   statusCode: number;
   message: string;

@@ -133,7 +133,7 @@ const SignUp = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="Ingrese el nombre nombre de la veterinaria"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -149,7 +149,7 @@ const SignUp = () => {
               value={form.cuit}
               onChange={handleChange}
               placeholder="Ingrese su CUIT"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -165,7 +165,7 @@ const SignUp = () => {
               value={form.address}
               onChange={handleChange}
               placeholder="Ingrese la direccion"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -182,7 +182,7 @@ const SignUp = () => {
               value={form.password}
               onChange={handleChange}
               placeholder="Ingrese su contraseña"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -199,7 +199,7 @@ const SignUp = () => {
               value={form.phoneNumber}
               onChange={handleChange}
               placeholder="1212121212"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -215,7 +215,7 @@ const SignUp = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="Ingrese su mail"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -230,7 +230,7 @@ const SignUp = () => {
               name="district"
               value={form.district}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-base font-normal"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-base font-normal"
             >
               <option value="">Seleccione un distrito</option>
               {DISTRICTS.map((district) => (
@@ -258,8 +258,8 @@ const SignUp = () => {
                 }
                 className={`
                   relative inline-flex h-6 w-11 items-center rounded-full
-                  transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                  ${form.isEmergencyVet ? "bg-indigo-500" : "bg-gray-200"}
+                  transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                  ${form.isEmergencyVet ? "bg-blue-500" : "bg-gray-200"}
                 `}
               >
                 <span

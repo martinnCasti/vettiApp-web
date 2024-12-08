@@ -278,7 +278,7 @@ const SignUp = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+            className={`w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ${
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -289,7 +289,7 @@ const SignUp = () => {
           Ya tenés cuenta?{" "}
           <Link
             href="/login"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-blue-500 hover:text-blue-600 font-medium"
           >
             Iniciá sesión
           </Link>

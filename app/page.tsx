@@ -1,6 +1,11 @@
 import Button from "@/components/Button";
 import React from "react";
 
+export const metadata = {
+  title: "VettiApp - Home",
+  description: "VettiApp tu gestion de turnos preferida",
+};
+
 const Home = () => {
   return (
     <section className="max-container padding-container gap-20 py-10 pb-32 md:gap-28 lg:p-40">

@@ -33,7 +33,7 @@ export interface Appointment {
   eventName: string;
   status: string;
   location: string;
-  id: string; // Usaremos este en lugar de eventId
+  eventId: string;
   invitees: {
     name: string;
     email: string;
@@ -66,6 +66,23 @@ export const scheduleApi = {
       return response.data;
     } catch (error) {
       console.error("Error fetching appointments:", error);
+      throw error;
+    }
+  },
+
+  cancelAppointment: async (eventId: string) => {
+    try {
+      const response = await api.post(
+        "/calendly/scheduled_events/cancellation",
+        {
+          eventId: eventId,
+          reason: "Cancelado por la veterinaria",
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error canceling appointment:", error);
       throw error;
     }
   },

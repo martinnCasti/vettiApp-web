@@ -202,7 +202,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     name: "Paloma Menendez",
     role: "Desarrolladora Mobile",
-    image: "",
+    image: "/assets/images/palo-menendez.jpg",
   },
   {
     name: "Martin Castiñeira",

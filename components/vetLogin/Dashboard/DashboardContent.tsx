@@ -210,7 +210,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
               ) : todayAppointments.length > 0 ? (
                 todayAppointments.map((appointment) => (
                   <div
-                    key={appointment.id}
+                    key={appointment.eventId}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
                   >
                     <div className="flex items-center space-x-4">

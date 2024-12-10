@@ -41,7 +41,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           return;
         }
 
-        // Actualizar el estado global
         checkStatus();
       } catch (error) {
         console.error("Error validando usuario:", error);
@@ -65,24 +64,24 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-screen flex flex-col bg-gray-100">
       <NavbarDashboard />
-      <div className="pt-16">
+      <div className="flex-1 pt-16 flex overflow-hidden">
         <Sidebar />
-        <main className="pl-64">
+        <main className="flex-1 md:pl-64 transition-all duration-300 flex flex-col min-h-0">
           <DisabledBanner />
           <PaymentBanner />
-          <div className="bg-gray-100 min-h-[calc(100vh-4rem)]">
-            <div className="p-6">
+          <div className="flex-1 overflow-y-auto bg-gray-100">
+            <div className="p-4 md:p-6 min-h-full">
               {shouldShowContent() ? (
                 children
               ) : (
-                <div className="text-center p-8">
-                  <h2 className="text-xl font-semibold text-gray-700">
+                <div className="text-center p-4 md:p-8">
+                  <h2 className="text-lg md:text-xl font-semibold text-gray-700">
                     Esta sección no está disponible mientras tu cuenta está en
                     revisión
                   </h2>
-                  <p className="text-gray-600 mt-2">
+                  <p className="text-sm md:text-base text-gray-600 mt-2">
                     Por favor, completa tu perfil y agrega tus servicios
                     mientras tanto.
                   </p>

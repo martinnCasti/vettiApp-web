@@ -86,7 +86,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
       description: isLoading
         ? "Cargando..."
         : error
-        ? "Error al cargar servicios"
+        ? "No existen servicios agregados"
         : `${eventsData?.events.map((e) => e.eventName).join(", ")}`,
       hideChange: true,
       showLink: true,
@@ -112,7 +112,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
   const todayAppointments = filterTodayAppointments(pendingAppointments);
 
   return (
-    <div className="h-full w-full max-w-[calc(100vw-16rem)] space-y-6">
+    <div className="h-full w-full space-y-6 overflow-y-auto pb-20">
       <div className="flex justify-between items-center flex-wrap gap-4">
         <h1 className="text-2xl font-bold text-gray-800">Bienvenido</h1>
         <div className="text-sm text-gray-500">
@@ -125,7 +125,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-lg sm:max-w-none mx-auto">
         {stats.map((stat, index) => (
           <Card
             key={index}
@@ -138,7 +138,6 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                 <div className="p-2 bg-gray-50 rounded-lg">{stat.icon}</div>
               </div>
               <div className="space-y-2">
-                {" "}
                 <h3 className="text-sm font-medium text-gray-600">
                   {stat.title}
                   {stat.requiresEnabled && isDisabled && (
@@ -150,7 +149,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                 <p className="text-2xl font-bold">
                   {stat.requiresEnabled && isDisabled ? "-" : stat.value}
                 </p>
-                <p className="text-xs text-gray-500 mb-8">{stat.description}</p>{" "}
+                <p className="text-xs text-gray-500 mb-8">{stat.description}</p>
                 {index === 0 && (
                   <Link
                     href="/login/dashboard/servicios"
@@ -162,14 +161,22 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                   </Link>
                 )}
                 {index === 1 && (
-                  <Link
-                    href="/login/dashboard/turnos"
-                    className="block mt-auto"
-                  >
-                    <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
-                      Ver turnos
-                    </button>
-                  </Link>
+                  <div className="block mt-auto">
+                    {isDisabled ? (
+                      <button
+                        disabled
+                        className="w-full bg-gray-400 text-white py-2 px-4 rounded-lg cursor-not-allowed opacity-50"
+                      >
+                        Ver turnos
+                      </button>
+                    ) : (
+                      <Link href="/login/dashboard/turnos">
+                        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                          Ver turnos
+                        </button>
+                      </Link>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -180,11 +187,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
       {!isDisabled ? (
         <div className="grid grid-cols-1 gap-4">
           <Card className="p-6">
-            {" "}
-            {/* Aumentado el padding */}
             <div className="flex items-center justify-between mb-6">
-              {" "}
-              {/* Aumentado el margin bottom */}
               <div>
                 <h2 className="text-xl font-semibold text-gray-800">
                   Próximos Turnos
@@ -193,12 +196,9 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                   Turnos agendados para hoy
                 </p>
               </div>
-              <Stethoscope className="w-6 h-6 text-blue-500" />{" "}
-              {/* Cambiado el color y tamaño */}
+              <Stethoscope className="w-6 h-6 text-blue-500" />
             </div>
             <div className="space-y-4">
-              {" "}
-              {/* Aumentado el espacio entre items */}
               {isLoading ? (
                 <div className="flex justify-center py-8">
                   <p className="text-gray-500">Cargando turnos...</p>
@@ -255,8 +255,6 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
               )}
             </div>
             <div className="mt-6">
-              {" "}
-              {/* Aumentado el margin top */}
               <Link href="/login/dashboard/calendario">
                 <button className="w-full bg-blue-500 text-white py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors duration-200 font-medium">
                   Agendar turno nuevo

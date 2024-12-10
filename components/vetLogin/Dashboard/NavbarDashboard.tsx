@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, User as UserIcon, LogOut } from "lucide-react";
 import { userApi, Vet } from "@/src/userApi";
 import cookie from "js-cookie";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import Link from "next/link";
+import { menuItems } from "@/constants";
 
 const LoadingScreen = () => {
   return (
@@ -18,12 +20,13 @@ const LoadingScreen = () => {
 };
 
 const NavbarDashboard = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<Vet | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { isStatusDisabled } = useSubscriptionStatus();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,15 +59,15 @@ const NavbarDashboard = () => {
     fetchUserData();
   }, [router]);
 
-  const handleLogout = () => {
-    try {
-      localStorage.clear();
-      cookie.remove("access_token");
-      cookie.remove("refresh_token");
-      router.push("/login");
-    } catch (error) {
-      console.error("Error durante el logout:", error);
+  const handleLogout = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    localStorage.clear();
+    cookie.remove("access_token");
+    cookie.remove("refresh_token");
+    window.location.href = "/login";
   };
 
   useEffect(() => {
@@ -79,96 +82,163 @@ const NavbarDashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    document.body.style.overflow = !isSidebarOpen ? "hidden" : "unset";
+  };
+
   if (isLoading) {
     return <LoadingScreen />;
   }
-
   return (
-    <nav className="bg-slate-400 shadow-lg fixed top-0 left-0 right-0 z-50 h-16">
-      <div className="max-w-[2520px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center">
-            <img
-              src="/logo.png"
-              alt="Logo"
-              width={40}
-              height={40}
-              className="h-10 w-auto"
-            />
-            {isStatusDisabled && (
-              <span className="ml-2 text-sm text-white bg-yellow-500 px-2 py-1 rounded-full">
-                Cuenta en revisión
-              </span>
-            )}
-          </div>
-
-          <div className="hidden md:block">
-            <div id="user-dropdown" className="relative">
+    <>
+      <nav className="bg-slate-400 shadow-lg fixed top-0 left-0 right-0 z-50 h-16">
+        <div className="max-w-[2520px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo y Botón de Menú */}
+            <div className="flex items-center gap-3">
               <button
-                className="flex items-center bg-gray-100 rounded-full px-4 py-2 text-sm hover:bg-gray-200 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-green-500"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={toggleSidebar}
+                className="md:hidden p-2 rounded-md hover:bg-gray-700/10 transition-colors duration-200"
+                aria-label="Toggle menu"
               >
-                <UserIcon className="h-6 w-6 text-gray-600 mr-2" />
-                <span className="text-gray-700">
-                  Bienvenido{user ? `, ${user.name}` : ""}
-                </span>
-                <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
+                {isSidebarOpen ? (
+                  <X className="h-6 w-6 text-gray-800" />
+                ) : (
+                  <Menu className="h-6 w-6 text-gray-800" />
+                )}
               </button>
 
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/logo_vetti.png"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="h-10 w-auto"
+                />
+                {isStatusDisabled && (
+                  <span className="hidden sm:inline-block text-sm text-white bg-yellow-500 px-2 py-1 rounded-full whitespace-nowrap">
+                    Cuenta en revisión
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Sección de usuario */}
+            <div className="flex items-center">
+              {/* Usuario Desktop */}
+              <div className="hidden md:block">
+                <div id="user-dropdown" className="relative">
                   <button
-                    onClick={handleLogout}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full transition"
+                    className="flex items-center bg-gray-100 rounded-full px-4 py-2 text-sm hover:bg-gray-200 transition-colors duration-200"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Cerrar Sesión
+                    <UserIcon className="h-6 w-6 text-gray-600 mr-2" />
+                    <span className="text-gray-700">
+                      Bienvenido{user ? `, ${user.name}` : ""}
+                    </span>
+                    <ChevronDown
+                      className={`ml-2 h-4 w-4 text-gray-500 transform transition-transform duration-200 ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
+
+                  <div
+                    className={`
+                      absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1
+                      transform transition-all duration-200 origin-top
+                      ${
+                        isDropdownOpen
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-95 pointer-events-none"
+                      }
+                    `}
+                  >
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full transition-colors duration-200"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Cerrar Sesión
+                    </button>
+                  </div>
                 </div>
-              )}
+              </div>
+
+              {/* Usuario Mobile */}
+              <div className="flex md:hidden items-center gap-2">
+                {isStatusDisabled && (
+                  <span className="text-xs text-white bg-yellow-500 px-2 py-1 rounded-full whitespace-nowrap">
+                    En revisión
+                  </span>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="p-1.5 flex items-center gap-1.5 bg-red-500 hover:bg-red-500 text-white rounded text-sm transition-colors duration-200"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Salir</span>
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+      </nav>
 
-          <div className="md:hidden">
-            <button
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
-            </button>
+      {/* Sidebar móvil */}
+      <div
+        className={`
+          fixed inset-y-0 left-0 w-64 bg-white shadow-xl md:hidden
+          transform transition-transform duration-300 ease-in-out z-40
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        <div className="h-16 bg-slate-400 w-full" />
+
+        <div className="h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="flex flex-col w-full">
+            <div className="relative">
+              {menuItems.map((item) => {
+                const isAllowed = !isStatusDisabled || item.allowedWhenDisabled;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={isAllowed ? item.href : "#"}
+                    className={`
+                      flex items-center px-6 py-3 w-full
+                      text-gray-700 bg-white
+                      transition-all duration-200
+                      relative
+                      ${
+                        !isAllowed
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-gray-100 cursor-pointer"
+                      }
+                    `}
+                    onClick={() => {
+                      if (isAllowed) {
+                        setIsSidebarOpen(false);
+                      }
+                    }}
+                  >
+                    {item.icon && <span className="mr-3">{item.icon}</span>}
+                    <span className="font-medium">{item.name}</span>
+                    {!isAllowed && (
+                      <span className="ml-2 text-xs text-gray-500">
+                        (No disponible)
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
-
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-4 pt-4 pb-3 space-y-1">
-            <div className="flex items-center">
-              <UserIcon className="h-10 w-10 text-gray-400" />
-              <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">
-                  {user?.name}
-                </div>
-                <div className="text-sm font-medium text-gray-500">
-                  {user?.email}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex w-full items-center px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
-      )}
-    </nav>
+    </>
   );
 };
 

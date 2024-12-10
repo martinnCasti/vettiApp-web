@@ -191,22 +191,22 @@ export interface TeamMember {
 export const TEAM_MEMBERS: TeamMember[] = [
   {
     name: "Camila Caruso",
-    role: "Analista Funcional - UX/UI",
+    role: "PMO",
     image: "/assets/images/cami-caruso.jpg",
   },
   {
     name: "Juan Manuel Luzzi",
-    role: "Desarrollador Backend",
+    role: "CTO",
     image: "/assets/images/juanma-luzzi.jpg",
   },
   {
     name: "Paloma Menendez",
-    role: "Desarrolladora Mobile",
+    role: "CEO",
     image: "/assets/images/palo-menendez.jpg",
   },
   {
     name: "Martin Castiñeira",
-    role: "Desarrollador Frontend",
+    role: "COO",
     image: "/assets/images/martin-casti.jpg",
   },
 ];

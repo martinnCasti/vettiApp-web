@@ -1,4 +1,3 @@
-// components/vetLogin/Sidebar.tsx
 import { menuItems } from "@/constants";
 import Link from "next/link";
 import { useSubscriptionStatus } from "../../hooks/useSubscriptionStatus";
@@ -12,7 +11,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-lg">
+    <div className="hidden md:block fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-lg">
       <div className="flex flex-col h-full">
         {menuItems.map((item) => {
           const isAllowed = !isDisabled || item.allowedWhenDisabled;

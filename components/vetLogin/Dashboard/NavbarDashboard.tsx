@@ -111,7 +111,7 @@ const NavbarDashboard = () => {
 
               <div className="flex items-center gap-2">
                 <img
-                  src="/logo_vetti.png"
+                  src="/public/logo_vetti.png"
                   alt="Logo"
                   width={40}
                   height={40}

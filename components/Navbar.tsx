@@ -56,7 +56,7 @@ const Navbar = () => {
             >
               <div className="w-[80px] h-[69px] relative">
                 <Image
-                  src="/public/logo_vetti.png"
+                  src="/logo_Vetti.png"
                   alt="logo"
                   fill
                   className="object-contain"

@@ -213,15 +213,23 @@ const TurnosComponent = () => {
         <p className="text-gray-600">{localStorage.getItem("userEmail")}</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {appointments.map((appointment) => (
-          <AppointmentCard
-            key={appointment.eventId}
-            appointment={appointment}
-            onCancelSuccess={handleCancelSuccess}
-          />
-        ))}
-      </div>
+      {appointments.length === 0 ? (
+        <div className="flex items-center justify-center p-8">
+          <div className="text-lg font-medium text-gray-600">
+            No hay turnos agendados
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {appointments.map((appointment) => (
+            <AppointmentCard
+              key={appointment.eventId}
+              appointment={appointment}
+              onCancelSuccess={handleCancelSuccess}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

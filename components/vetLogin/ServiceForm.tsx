@@ -70,7 +70,7 @@ const ServiceForm = () => {
 
   const formatDataForApi = () => {
     const vetEmail = localStorage.getItem("userEmail");
-    const vetName = localStorage.getItem("vetName");
+    const vetName = localStorage.getItem("userName");
 
     if (!vetName) {
       const userData = userApi.getUserData();

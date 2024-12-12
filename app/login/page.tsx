@@ -60,7 +60,7 @@ const SignIn = () => {
       // Guardar datos adicionales de la respuesta
       localStorage.setItem("vetId", response.data.id.toString());
       localStorage.setItem("vetEmail", response.data.email);
-      localStorage.setItem("vetName", response.data.name);
+      localStorage.setItem("userName", response.data.name);
       localStorage.setItem("vetCuit", response.data.cuit);
       localStorage.setItem("vetAddress", response.data.address);
       localStorage.setItem("vetPhone", response.data.phoneNumber);

@@ -10,7 +10,6 @@ const api = axios.create({
   withCredentials: false,
 });
 
-// Interceptor para añadir el token en cada solicitud
 api.interceptors.request.use(
   async (config) => {
     let token = "";

@@ -100,7 +100,7 @@ export default function ResetPasswordClient() {
           )}
 
           {success && (
-            <div className="text-green-500 text-sm bg-green-50 p-3 rounded-lg">
+            <div className="text-black text-sm bg-green-400 p-3 rounded-lg">
               ¡Contraseña actualizada exitosamente! Redirigiendo...
             </div>
           )}

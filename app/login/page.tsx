@@ -95,7 +95,7 @@ const SignIn = () => {
           </div>
         )}
         {success && (
-          <div className="text-green-600 mb-4 p-3 bg-green-50 rounded-lg text-center">
+          <div className="text-black mb-4 p-3 bg-green-400 rounded-lg text-center">
             ¡Inicio de sesión exitoso!
           </div>
         )}

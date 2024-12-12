@@ -71,8 +71,6 @@ const ServiceForm = () => {
   const formatDataForApi = () => {
     const vetEmail = localStorage.getItem("userEmail");
     const vetName = localStorage.getItem("vetName");
-    console.log(vetEmail, "email:");
-    console.log(vetName, "veteName:");
 
     if (!vetName) {
       const userData = userApi.getUserData();

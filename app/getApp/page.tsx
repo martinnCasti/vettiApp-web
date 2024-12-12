@@ -1,4 +1,4 @@
-"use client"; // Asegúrate de marcarlo como Client Component
+"use client";
 
 import React from "react";
 import Button from "../../components/Button";

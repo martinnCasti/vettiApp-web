@@ -110,7 +110,13 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
     },
   ];
 
-  const todayAppointments = filterTodayAppointments(pendingAppointments);
+  const todayAppointments = filterTodayAppointments(pendingAppointments).sort(
+    (a, b) => {
+      const timeA = new Date(a.startTime).getTime();
+      const timeB = new Date(b.startTime).getTime();
+      return timeA - timeB;
+    }
+  );
 
   return (
     <div className="h-full w-full space-y-6 overflow-y-auto pb-20">
@@ -223,7 +229,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                 todayAppointments.map((appointment) => (
                   <div
                     key={appointment.eventId}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                    className="flex items-center justify-between p-4 bg-gray-10 hover:bg-gray-20 rounded-xl transition-colors duration-200"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0 p-2 bg-blue-100 rounded-lg">
@@ -233,7 +239,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                         <p className="font-medium text-gray-800">
                           {appointment.invitees[0]?.name || "Sin nombre"}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-700">
                           {appointment.eventName}
                         </p>
                       </div>
@@ -248,7 +254,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                           }
                         )}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-700">
                         {appointment.vetName}
                       </p>
                     </div>

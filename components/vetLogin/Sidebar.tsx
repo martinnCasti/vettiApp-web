@@ -1,14 +1,9 @@
 import { menuItems } from "@/constants";
 import Link from "next/link";
 import { useSubscriptionStatus } from "../../hooks/useSubscriptionStatus";
-import SidebarSkeleton from "@/components/vetLogin/Loadings/SidebarLoading";
 
 const Sidebar = () => {
-  const { isStatusDisabled: isDisabled, loading } = useSubscriptionStatus();
-
-  if (loading) {
-    return <SidebarSkeleton />;
-  }
+  const { isStatusDisabled: isDisabled } = useSubscriptionStatus();
 
   return (
     <div className="hidden md:block fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-lg">

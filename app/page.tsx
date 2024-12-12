@@ -19,7 +19,12 @@ const Home = () => {
         </p>
       </div>
       <div className="flex flex-col items-center w-full gap-3 sm:flex-row sm:justify-center px-4">
-        <Button type="button" title="Descargar App" variant="btn_blue" />
+        <Button
+          type="button"
+          title="Descargar App"
+          variant="btn_blue"
+          href="https://expo.dev/accounts/pmenendezp/projects/vetti/builds/e756815c-4306-48a9-a066-bccf4ac1cd3e"
+        />
       </div>
     </section>
   );

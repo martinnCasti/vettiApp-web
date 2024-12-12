@@ -18,7 +18,7 @@ const GetApp: React.FC = () => {
           type="button"
           title="Descargar App"
           variant="btn_blue"
-          href="https://link-descargar-apk.com"
+          href="https://expo.dev/accounts/pmenendezp/projects/vetti/builds/e756815c-4306-48a9-a066-bccf4ac1cd3e"
         />
       </div>
     </div>

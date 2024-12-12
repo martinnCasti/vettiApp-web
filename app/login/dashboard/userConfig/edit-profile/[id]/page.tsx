@@ -142,31 +142,6 @@ const EditProfile = ({ params }: { params: { id: string } }) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Los inputs permanecen igual */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Nombre Veterinaria
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Ingrese el nombre de la veterinaria"
-              className="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Ingrese su email"
-              className="w-full p-2 border rounded-md"
-            />
-          </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">

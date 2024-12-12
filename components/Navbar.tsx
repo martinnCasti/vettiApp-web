@@ -85,7 +85,7 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center space-x-4">
             <Button
               type="button"
-              title="Logearse"
+              title="Ingresar"
               icon="/profile.png"
               variant="btn_dark_green"
               href="/login"

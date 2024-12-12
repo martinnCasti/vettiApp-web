@@ -62,7 +62,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Servicios",
     href: "/login/dashboard/servicios",
-    allowedWhenDisabled: true,
+    allowedWhenDisabled: false,
   },
   {
     name: "Calendario",

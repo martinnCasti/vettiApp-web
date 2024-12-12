@@ -90,6 +90,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
         : `${eventsData?.events.map((e) => e.eventName).join(", ")}`,
       hideChange: true,
       showLink: true,
+      requiresEnabled: true,
     },
     {
       title: "Turnos Agendados",
@@ -151,14 +152,25 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ isDisabled }) => {
                 </p>
                 <p className="text-xs text-gray-500 mb-8">{stat.description}</p>
                 {index === 0 && (
-                  <Link
-                    href="/login/dashboard/servicios"
-                    className="block mt-auto"
-                  >
-                    <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
-                      Ver servicios
-                    </button>
-                  </Link>
+                  <div className="block mt-auto">
+                    {isDisabled ? (
+                      <button
+                        disabled
+                        className="w-full bg-gray-400 text-white py-2 px-4 rounded-lg cursor-not-allowed opacity-50"
+                      >
+                        Ver servicios
+                      </button>
+                    ) : (
+                      <Link
+                        href="/login/dashboard/servicios"
+                        className="block mt-auto"
+                      >
+                        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                          Ver servicios
+                        </button>
+                      </Link>
+                    )}
+                  </div>
                 )}
                 {index === 1 && (
                   <div className="block mt-auto">

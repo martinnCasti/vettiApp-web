@@ -14,12 +14,8 @@ const DisabledBanner = memo(() => {
       <div className="bg-yellow-100 py-2 px-4 rounded-lg border border-yellow-400">
         <p className="text-center text-gray-800">
           Tu cuenta está pendiente de activación. Esto podría tardar unas 24hs
-          aproximadamente. Una vez activada la cuenta debera cerrar sesion e
-          iniciar sesion de nuevo.
-        </p>
-        <p className="text-center text-gray-800">
-          Mientras tanto, podra cargar los Servicios que va a brindar en la
-          pestaña de Servicios.
+          aproximadamente. Una vez activada la cuenta se le enviara un mail con
+          la confirmacion de la activación
         </p>
       </div>
     </div>

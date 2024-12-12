@@ -5,6 +5,7 @@ import { Clock, Calendar, X, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import scheduleApi from "@/src/services/scheduleApi";
 import { VETERINARY_SERVICES } from "@/constants";
+import userApi from "@/src/userApi";
 
 interface TimeSlot {
   from: string;
@@ -69,7 +70,18 @@ const ServiceForm = () => {
 
   const formatDataForApi = () => {
     const vetEmail = localStorage.getItem("userEmail");
-    const vetName = localStorage.getItem("userName");
+    const vetName = localStorage.getItem("vetName");
+    console.log(vetEmail, "email:");
+    console.log(vetName, "veteName:");
+
+    if (!vetName) {
+      const userData = userApi.getUserData();
+      if (!userData.name) {
+        throw new Error(
+          "No se encontró el nombre de la veterinaria. Por favor, vuelve a iniciar sesión."
+        );
+      }
+    }
 
     const days = Object.entries(scheduleData)
       .filter(([_, timeSlots]) => timeSlots.length > 0)
@@ -97,7 +109,10 @@ const ServiceForm = () => {
       alert("Servicio agregado exitosamente");
       router.push("/login/dashboard/servicios");
     } catch (error: any) {
-      if (error.response?.status === 401) {
+      if (error.message.includes("nombre de la veterinaria")) {
+        alert(error.message);
+        router.push("/login");
+      } else if (error.response?.status === 401) {
         alert("Sesión expirada. Por favor, vuelve a iniciar sesión.");
         router.push("/login");
       } else {

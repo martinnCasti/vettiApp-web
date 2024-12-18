@@ -2,7 +2,7 @@
 
 // Navegacion pagina principal
 export const NAV_LINKS = [
-  { href: "/", key: "how_vettiapp_work", label: "Que es VettiApp?" },
+  // { href: "/", key: "how_vettiapp_work", label: "Que es VettiApp?" },
   { href: "/work", key: "work", label: "Servicios" },
   { href: "/aboutUs", key: "about_us", label: "Sobre nosotros" },
   { href: "/suscribe", key: "subscribe", label: "Asociate" },
@@ -102,7 +102,7 @@ export const VETERINARY_SERVICES = [
 ] as const;
 
 export const SERVICE_DESCRIPTIONS: Record<string, string> = {
-  "Consultas generales":
+  "Consulta general":
     "Evaluación completa del estado de salud de tu mascota, incluyendo examen físico y recomendaciones generales",
   "Vacunación y/o desparasitación":
     "Aplicación de vacunas según calendario y tratamientos antiparasitarios internos y externos",

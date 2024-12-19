@@ -1,7 +1,10 @@
-"use client";
 import React from "react";
 import { TEAM_MEMBERS } from "@/constants/index";
 
+export const metadata = {
+  title: "Vetti - Sobre Nosotros",
+  description: "Vetti, tu gestion de turnos preferida",
+};
 const AboutUs = () => {
   const getInitials = (name: string) => {
     return name

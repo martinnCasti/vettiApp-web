@@ -1,8 +1,10 @@
-"use client";
-
 import React from "react";
 import Button from "../../components/Button";
 
+export const metadata = {
+  title: "Vetti - Descarga la App",
+  description: "Vetti, tu gestion de turnos preferida",
+};
 const GetApp: React.FC = () => {
   return (
     <div className="m-10">
@@ -12,7 +14,7 @@ const GetApp: React.FC = () => {
         </h2>
         <p className="text-gray-600 mb-6">
           Disfruta de todas nuestras características y servicios en tu
-          dispositivo móvil.
+          dispositivo móvil. Exclusivo para clientes finales.
         </p>
         <Button
           type="button"

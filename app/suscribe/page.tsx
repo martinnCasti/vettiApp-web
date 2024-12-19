@@ -1,8 +1,11 @@
-"use client";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { PREMIUM_PLAN } from "@/constants";
 
+export const metadata = {
+  title: "Vetti - Suscribite",
+  description: "Vetti, tu gestion de turnos preferida",
+};
 const Card = ({
   children,
   className = "",

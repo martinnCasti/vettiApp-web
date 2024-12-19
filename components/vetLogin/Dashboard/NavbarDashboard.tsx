@@ -26,7 +26,6 @@ const NavbarDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { isStatusDisabled } = useSubscriptionStatus();
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -64,10 +63,15 @@ const NavbarDashboard = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    localStorage.clear();
-    cookie.remove("access_token");
-    cookie.remove("refresh_token");
-    window.location.href = "/login";
+
+    const confirmar = window.confirm("¿Estás seguro que querés cerrar sesión?");
+
+    if (confirmar) {
+      localStorage.clear();
+      cookie.remove("access_token");
+      cookie.remove("refresh_token");
+      window.location.href = "/login";
+    }
   };
 
   useEffect(() => {

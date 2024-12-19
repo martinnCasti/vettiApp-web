@@ -1,6 +1,11 @@
 import Image from "next/image";
 import React from "react";
 
+export const metadata = {
+  title: "Vetti - Servicios",
+  description: "Vetti, tu gestion de turnos preferida",
+};
+
 const Services = () => {
   return (
     <section className="max-container padding-container mt-10 lg:flex flex-row size-full">

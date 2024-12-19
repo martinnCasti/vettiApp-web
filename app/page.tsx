@@ -2,8 +2,8 @@ import Button from "@/components/Button";
 import React from "react";
 
 export const metadata = {
-  title: "VettiApp - Home",
-  description: "VettiApp tu gestion de turnos preferida",
+  title: "Vetti - Home",
+  description: "Vetti, tu gestion de turnos preferida",
 };
 
 const Home = () => {
